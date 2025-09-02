@@ -258,20 +258,23 @@
     </style>
 </head>
 <body>
-    <!-- Перевірка авторизації -->
     <script>
+        // Глобальні змінні для зберігання даних
+        let userData = {};
+        let rememberedUser = null;
+        
         // Функція для перевірки, чи користувач авторизований
         function checkAuth() {
             // Перевіряємо наявність токена в localStorage
             const token = localStorage.getItem('authToken');
-            const userData = localStorage.getItem('userData');
+            userData = JSON.parse(localStorage.getItem('userData') || '{}');
             
             // Перевіряємо наявність збережених даних для автозаповнення
-            const rememberedUser = localStorage.getItem('rememberedUser');
+            rememberedUser = JSON.parse(localStorage.getItem('rememberedUser') || 'null');
             
             // Якщо токена немає - показуємо форму авторизації
             if (!token) {
-                showAuthForm(rememberedUser ? JSON.parse(rememberedUser) : null);
+                showAuthForm();
                 return false;
             }
             
@@ -279,7 +282,7 @@
         }
         
         // Функція для відображення форми авторизації/реєстрації
-        function showAuthForm(rememberedUser) {
+        function showAuthForm() {
             document.body.innerHTML = `
                 <div class="auth-container">
                     <div class="auth-tabs">
@@ -291,14 +294,14 @@
                         <h2 class="form-title">Вхід в систему</h2>
                         <div class="form-group">
                             <label for="loginEmail">Електронна пошта</label>
-                            <input type="email" id="loginEmail" placeholder="Введіть вашу пошту" value="${rememberedUser ? rememberedUser.email : ''}">
+                            <input type="email" id="loginEmail" placeholder="Введіть вашу пошту">
                         </div>
                         <div class="form-group">
                             <label for="loginPassword">Пароль</label>
-                            <input type="password" id="loginPassword" placeholder="Введіть ваш пароль" value="${rememberedUser ? rememberedUser.password : ''}">
+                            <input type="password" id="loginPassword" placeholder="Введіть ваш пароль">
                         </div>
                         <div class="remember-me">
-                            <input type="checkbox" id="rememberMe" ${rememberedUser ? 'checked' : ''}>
+                            <input type="checkbox" id="rememberMe">
                             <label for="rememberMe">Запам'ятати мене</label>
                         </div>
                         <button class="auth-btn" onclick="login()">Увійти</button>
@@ -329,6 +332,13 @@
                     <p>© 2023 Всі права захищені</p>
                 </footer>
             `;
+            
+            // Якщо є збережені дані користувача, заповнюємо поля
+            if (rememberedUser) {
+                document.getElementById('loginEmail').value = rememberedUser.email || '';
+                document.getElementById('loginPassword').value = rememberedUser.password || '';
+                document.getElementById('rememberMe').checked = true;
+            }
         }
         
         // Функція для перемикання між вкладками входу та реєстрації
@@ -520,10 +530,8 @@
         }
         
         // Перевіряємо авторизацію при завантаженні сторінки
-        let userData = {};
         if (checkAuth()) {
             // Якщо користувач авторизований, завантажуємо dashboard
-            userData = JSON.parse(localStorage.getItem('userData') || '{}');
             showDashboard();
         }
     </script>
