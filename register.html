@@ -65,29 +65,55 @@
             font-weight: 500;
         }
 
-        .form-group input {
+        .password-input-container {
+            position: relative;
+        }
+
+        .password-input {
             width: 100%;
-            padding: 12px 15px;
+            padding: 12px 45px 12px 15px;
             border: 2px solid #ddd;
             border-radius: 8px;
             font-size: 16px;
             transition: border-color 0.3s ease;
         }
 
-        .form-group input:focus {
+        .password-input:focus {
             outline: none;
             border-color: #667eea;
         }
 
-        .form-group input.error {
+        .password-toggle {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #666;
+            font-size: 18px;
+            padding: 0;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .password-toggle:hover {
+            color: #667eea;
+        }
+
+        .password-input.error {
             border-color: #ff4757;
         }
 
-        .form-group input.warning {
+        .password-input.warning {
             border-color: #ffa502;
         }
 
-        .form-group input.success {
+        .password-input.success {
             border-color: #2ed573;
         }
 
@@ -215,19 +241,24 @@
             <form id="registerForm">
                 <div class="form-group">
                     <label for="fullName">Повне ім'я:</label>
-                    <input type="text" id="fullName" name="fullName" required>
+                    <input type="text" id="fullName" name="fullName" class="password-input" required>
                     <div class="error-message" id="fullNameError">Будь ласка, введіть ваше ім'я</div>
                 </div>
                 
                 <div class="form-group">
                     <label for="regEmail">Електронна пошта:</label>
-                    <input type="email" id="regEmail" name="email" required>
+                    <input type="email" id="regEmail" name="email" class="password-input" required>
                     <div class="error-message" id="emailError">Будь ласка, введіть коректну email адресу</div>
                 </div>
                 
                 <div class="form-group">
                     <label for="regPassword">Пароль:</label>
-                    <input type="password" id="regPassword" name="password" required minlength="6">
+                    <div class="password-input-container">
+                        <input type="password" id="regPassword" name="password" class="password-input" required minlength="6">
+                        <button type="button" class="password-toggle" id="passwordToggle">
+                            👁️
+                        </button>
+                    </div>
                     
                     <div class="password-strength">
                         <div class="strength-meter" id="strengthMeter"></div>
@@ -258,7 +289,12 @@
                 
                 <div class="form-group">
                     <label for="confirmPassword">Підтвердіть пароль:</label>
-                    <input type="password" id="confirmPassword" name="confirmPassword" required>
+                    <div class="password-input-container">
+                        <input type="password" id="confirmPassword" name="confirmPassword" class="password-input" required>
+                        <button type="button" class="password-toggle" id="confirmPasswordToggle">
+                            👁️
+                        </button>
+                    </div>
                     <div class="error-message" id="confirmPasswordError">Паролі не співпадають</div>
                 </div>
                 
@@ -276,6 +312,9 @@
         document.addEventListener('DOMContentLoaded', function() {
             const registerForm = document.getElementById('registerForm');
             const passwordInput = document.getElementById('regPassword');
+            const confirmPasswordInput = document.getElementById('confirmPassword');
+            const passwordToggle = document.getElementById('passwordToggle');
+            const confirmPasswordToggle = document.getElementById('confirmPasswordToggle');
             const strengthMeter = document.getElementById('strengthMeter');
             const strengthText = document.getElementById('strengthText');
             
@@ -283,7 +322,7 @@
                 fullName: document.getElementById('fullName'),
                 email: document.getElementById('regEmail'),
                 password: passwordInput,
-                confirmPassword: document.getElementById('confirmPassword')
+                confirmPassword: confirmPasswordInput
             };
 
             const errors = {
@@ -300,6 +339,19 @@
                 number: document.getElementById('reqNumber'),
                 special: document.getElementById('reqSpecial')
             };
+
+            // Toggle password visibility
+            function setupPasswordToggle(toggleButton, inputField) {
+                toggleButton.addEventListener('click', function() {
+                    const isPassword = inputField.type === 'password';
+                    inputField.type = isPassword ? 'text' : 'password';
+                    toggleButton.textContent = isPassword ? '🔒' : '👁️';
+                });
+            }
+
+            // Initialize password toggles
+            setupPasswordToggle(passwordToggle, passwordInput);
+            setupPasswordToggle(confirmPasswordToggle, confirmPasswordInput);
 
             // Password strength checker
             function checkPasswordStrength(password) {
@@ -404,19 +456,19 @@
                 if (strength.score <= 2) {
                     strengthMeter.style.background = '#ff4757';
                     strengthText.className = 'strength-text strength-very-weak';
-                    passwordInput.className = 'error';
+                    passwordInput.className = 'password-input error';
                 } else if (strength.score <= 4) {
                     strengthMeter.style.background = '#ff6b81';
                     strengthText.className = 'strength-text strength-weak';
-                    passwordInput.className = 'warning';
+                    passwordInput.className = 'password-input warning';
                 } else if (strength.score <= 6) {
                     strengthMeter.style.background = '#ffa502';
                     strengthText.className = 'strength-text strength-medium';
-                    passwordInput.className = '';
+                    passwordInput.className = 'password-input';
                 } else {
                     strengthMeter.style.background = '#2ed573';
                     strengthText.className = 'strength-text strength-strong';
-                    passwordInput.className = 'success';
+                    passwordInput.className = 'password-input success';
                 }
                 
                 // Update requirements
@@ -427,7 +479,7 @@
             });
 
             // Other validation functions
-            inputs.confirmPassword.addEventListener('input', validatePasswordMatch);
+            confirmPasswordInput.addEventListener('input', validatePasswordMatch);
             inputs.email.addEventListener('blur', validateEmail);
 
             function validateEmail() {
@@ -444,9 +496,11 @@
             function validatePasswordMatch() {
                 if (inputs.password.value !== inputs.confirmPassword.value) {
                     showError(inputs.confirmPassword, errors.confirmPassword, 'Паролі не співпадають');
+                    confirmPasswordInput.className = 'password-input error';
                     return false;
                 } else {
                     hideError(inputs.confirmPassword, errors.confirmPassword);
+                    confirmPasswordInput.className = 'password-input success';
                     return true;
                 }
             }
