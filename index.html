@@ -159,5 +159,14 @@
             <p>&copy; 2024 Auth App. Усі права захищені.</p>
         </footer>
     </div>
+
+    <script>
+        // Ініціалізація localStorage для зберігання користувачів
+        document.addEventListener('DOMContentLoaded', function() {
+            if (!localStorage.getItem('registeredUsers')) {
+                localStorage.setItem('registeredUsers', JSON.stringify([]));
+            }
+        });
+    </script>
 </body>
 </html>
