@@ -353,6 +353,19 @@
             setupPasswordToggle(passwordToggle, passwordInput);
             setupPasswordToggle(confirmPasswordToggle, confirmPasswordInput);
 
+            // Check if email already exists
+            function isEmailRegistered(email) {
+                const users = JSON.parse(localStorage.getItem('registeredUsers') || '[]');
+                return users.some(user => user.email === email);
+            }
+
+            // Save user to localStorage
+            function saveUser(userData) {
+                const users = JSON.parse(localStorage.getItem('registeredUsers') || '[]');
+                users.push(userData);
+                localStorage.setItem('registeredUsers', JSON.stringify(users));
+            }
+
             // Password strength checker
             function checkPasswordStrength(password) {
                 let strength = 0;
@@ -487,10 +500,16 @@
                 if (!emailRegex.test(inputs.email.value)) {
                     showError(inputs.email, errors.email, 'Будь ласка, введіть коректну email адресу');
                     return false;
-                } else {
-                    hideError(inputs.email, errors.email);
-                    return true;
                 }
+                
+                // Check if email is already registered
+                if (isEmailRegistered(inputs.email.value)) {
+                    showError(inputs.email, errors.email, 'Цей email вже зареєстрований');
+                    return false;
+                }
+                
+                hideError(inputs.email, errors.email);
+                return true;
             }
 
             function validatePasswordMatch() {
@@ -547,13 +566,19 @@
                         return;
                     }
 
-                    // Simulate registration process
-                    console.log('Registration attempt:', {
+                    // Save user data
+                    const userData = {
+                        id: Date.now().toString(),
                         fullName: inputs.fullName.value,
                         email: inputs.email.value,
-                        password: inputs.password.value,
-                        passwordStrength: passwordStrength.message
-                    });
+                        password: inputs.password.value, // У реальному додатку пароль має бути хешований!
+                        registeredAt: new Date().toISOString()
+                    };
+
+                    saveUser(userData);
+
+                    // Simulate registration process
+                    console.log('Registration successful:', userData);
 
                     // Redirect to login page
                     alert('Реєстрація успішна! Тепер ви можете увійти.');
