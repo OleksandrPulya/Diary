@@ -149,13 +149,33 @@
             color: #6a11cb;
         }
         
-        .login-form {
+        .auth-container {
             max-width: 400px;
-            margin: 100px auto;
+            margin: 50px auto;
             padding: 30px;
             background-color: white;
             border-radius: 8px;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .auth-tabs {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .auth-tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            text-align: center;
+            flex: 1;
+            color: #777;
+        }
+        
+        .auth-tab.active {
+            color: #6a11cb;
+            border-bottom: 2px solid #6a11cb;
+            font-weight: bold;
         }
         
         .form-title {
@@ -182,7 +202,7 @@
             font-size: 16px;
         }
         
-        .login-btn {
+        .auth-btn {
             width: 100%;
             padding: 12px;
             background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
@@ -194,12 +214,19 @@
             transition: opacity 0.3s;
         }
         
-        .login-btn:hover {
+        .auth-btn:hover {
             opacity: 0.9;
         }
         
         .error-message {
             color: #e74c3c;
+            text-align: center;
+            margin-top: 15px;
+            display: none;
+        }
+        
+        .success-message {
+            color: #2ecc71;
             text-align: center;
             margin-top: 15px;
             display: none;
@@ -211,6 +238,12 @@
             padding: 20px;
             color: #777;
             border-top: 1px solid #eee;
+        }
+        
+        .password-hint {
+            font-size: 12px;
+            color: #777;
+            margin-top: 5px;
         }
     </style>
 </head>
@@ -225,49 +258,159 @@
             
             // Якщо токена немає - показуємо форму авторизації
             if (!token) {
-                document.body.innerHTML = `
-                    <div class="login-form">
-                        <h2 class="form-title">Вхід в систему</h2>
-                        <div class="form-group">
-                            <label for="email">Електронна пошта</label>
-                            <input type="email" id="email" placeholder="Введіть вашу пошту">
-                        </div>
-                        <div class="form-group">
-                            <label for="password">Пароль</label>
-                            <input type="password" id="password" placeholder="Введіть ваш пароль">
-                        </div>
-                        <button class="login-btn" onclick="login()">Увійти</button>
-                        <div class="error-message" id="loginError">Невірний email або пароль</div>
-                    </div>
-                    <footer class="container">
-                        <p>© 2023 Всі права захищені</p>
-                    </footer>
-                `;
+                showAuthForm();
                 return false;
             }
             
             return true;
         }
         
+        // Функція для відображення форми авторизації/реєстрації
+        function showAuthForm() {
+            document.body.innerHTML = `
+                <div class="auth-container">
+                    <div class="auth-tabs">
+                        <div class="auth-tab active" id="loginTab" onclick="switchTab('login')">Вхід</div>
+                        <div class="auth-tab" id="registerTab" onclick="switchTab('register')">Реєстрація</div>
+                    </div>
+                    
+                    <div id="loginForm">
+                        <h2 class="form-title">Вхід в систему</h2>
+                        <div class="form-group">
+                            <label for="loginEmail">Електронна пошта</label>
+                            <input type="email" id="loginEmail" placeholder="Введіть вашу пошту">
+                        </div>
+                        <div class="form-group">
+                            <label for="loginPassword">Пароль</label>
+                            <input type="password" id="loginPassword" placeholder="Введіть ваш пароль">
+                        </div>
+                        <button class="auth-btn" onclick="login()">Увійти</button>
+                        <div class="error-message" id="loginError">Невірний email або пароль</div>
+                    </div>
+                    
+                    <div id="registerForm" style="display: none;">
+                        <h2 class="form-title">Реєстрація</h2>
+                        <div class="form-group">
+                            <label for="registerName">Ім'я</label>
+                            <input type="text" id="registerName" placeholder="Введіть ваше ім'я">
+                        </div>
+                        <div class="form-group">
+                            <label for="registerEmail">Електронна пошта</label>
+                            <input type="email" id="registerEmail" placeholder="Введіть вашу пошту">
+                        </div>
+                        <div class="form-group">
+                            <label for="registerPassword">Пароль</label>
+                            <input type="password" id="registerPassword" placeholder="Створіть пароль">
+                            <div class="password-hint">Пароль має містити принаймні 6 символів</div>
+                        </div>
+                        <button class="auth-btn" onclick="register()">Зареєструватися</button>
+                        <div class="error-message" id="registerError">Помилка реєстрації</div>
+                        <div class="success-message" id="registerSuccess">Реєстрація успішна! Можете увійти.</div>
+                    </div>
+                </div>
+                <footer class="container">
+                    <p>© 2023 Всі права захищені</p>
+                </footer>
+            `;
+        }
+        
+        // Функція для перемикання між вкладками входу та реєстрації
+        function switchTab(tab) {
+            if (tab === 'login') {
+                document.getElementById('loginTab').classList.add('active');
+                document.getElementById('registerTab').classList.remove('active');
+                document.getElementById('loginForm').style.display = 'block';
+                document.getElementById('registerForm').style.display = 'none';
+            } else {
+                document.getElementById('loginTab').classList.remove('active');
+                document.getElementById('registerTab').classList.add('active');
+                document.getElementById('loginForm').style.display = 'none';
+                document.getElementById('registerForm').style.display = 'block';
+            }
+        }
+        
+        // Функція для перевірки, чи email вже зареєстрований
+        function isEmailRegistered(email) {
+            // Отримуємо список користувачів з localStorage
+            const users = JSON.parse(localStorage.getItem('registeredUsers') || '[]');
+            
+            // Перевіряємо, чи існує користувач з таким email
+            return users.some(user => user.email === email);
+        }
+        
+        // Функція для реєстрації нового користувача
+        function register() {
+            const name = document.getElementById('registerName').value;
+            const email = document.getElementById('registerEmail').value;
+            const password = document.getElementById('registerPassword').value;
+            const errorElement = document.getElementById('registerError');
+            const successElement = document.getElementById('registerSuccess');
+            
+            // Ховаємо попередні повідомлення
+            errorElement.style.display = 'none';
+            successElement.style.display = 'none';
+            
+            // Валідація даних
+            if (!name || !email || !password) {
+                errorElement.textContent = 'Будь ласка, заповніть всі поля';
+                errorElement.style.display = 'block';
+                return;
+            }
+            
+            if (password.length < 6) {
+                errorElement.textContent = 'Пароль має містити принаймні 6 символів';
+                errorElement.style.display = 'block';
+                return;
+            }
+            
+            // Перевіряємо, чи email вже зареєстрований
+            if (isEmailRegistered(email)) {
+                errorElement.textContent = 'Користувач з таким email вже існує';
+                errorElement.style.display = 'block';
+                return;
+            }
+            
+            // Зберігаємо нового користувача
+            const users = JSON.parse(localStorage.getItem('registeredUsers') || '[]');
+            users.push({ name, email, password });
+            localStorage.setItem('registeredUsers', JSON.stringify(users));
+            
+            // Показуємо повідомлення про успіх
+            successElement.style.display = 'block';
+            
+            // Очищаємо поля форми
+            document.getElementById('registerName').value = '';
+            document.getElementById('registerEmail').value = '';
+            document.getElementById('registerPassword').value = '';
+            
+            // Перемикаємо на вкладку входу через 2 секунди
+            setTimeout(() => switchTab('login'), 2000);
+        }
+        
         // Функція для входу в систему
         function login() {
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
             const errorElement = document.getElementById('loginError');
             
-            // Спрощена перевірка (в реальному застосунку буде запит до сервера)
-            if (email === 'admin@example.com' && password === 'admin123') {
+            // Отримуємо список зареєстрованих користувачів
+            const users = JSON.parse(localStorage.getItem('registeredUsers') || '[]');
+            
+            // Шукаємо користувача з відповідним email та паролем
+            const user = users.find(u => u.email === email && u.password === password);
+            
+            if (user) {
                 // Зберігаємо токен та дані користувача
                 localStorage.setItem('authToken', 'fake-jwt-token-' + Math.random().toString(36).substr(2));
                 localStorage.setItem('userData', JSON.stringify({
-                    name: 'Іван Петренко',
-                    email: email,
-                    role: 'Адміністратор'
+                    name: user.name,
+                    email: user.email
                 }));
                 
                 // Перезавантажуємо сторінку
                 location.reload();
             } else {
+                errorElement.textContent = 'Невірний email або пароль';
                 errorElement.style.display = 'block';
             }
         }
@@ -279,16 +422,15 @@
             location.reload();
         }
         
-        // Перевіряємо авторизацію при завантаженні сторінки
-        if (checkAuth()) {
-            // Якщо користувач авторизований, завантажуємо dashboard
+        // Функція для відображення панелі управління
+        function showDashboard() {
             document.body.innerHTML = `
                 <header>
                     <div class="container header-content">
                         <div class="logo">МояСистема</div>
                         <div class="user-info">
-                            <div class="user-avatar">IP</div>
-                            <span id="userName">Іван Петренко</span>
+                            <div class="user-avatar">${userData.name ? userData.name.charAt(0).toUpperCase() : 'U'}</div>
+                            <span id="userName">${userData.name || 'Користувач'}</span>
                             <button class="logout-btn" onclick="logout()">Вийти</button>
                         </div>
                     </div>
@@ -296,7 +438,7 @@
                 
                 <div class="container dashboard-content">
                     <div class="welcome-message">
-                        <h1>Ласкаво просимо, <span id="welcomeUserName">Іван Петренко</span>!</h1>
+                        <h1>Ласкаво просимо, <span id="welcomeUserName">${userData.name || 'Користувач'}</span>!</h1>
                         <p>Це ваша панель управління. Тут ви можете переглядати статистику та керувати вашим обліковим записом.</p>
                     </div>
                     
@@ -346,13 +488,14 @@
                     <p>© 2023 МояСистема. Всі права захищені</p>
                 </footer>
             `;
-            
-            // Отримуємо дані користувача з localStorage
-            const userData = JSON.parse(localStorage.getItem('userData') || '{}');
-            if (userData.name) {
-                document.getElementById('userName').textContent = userData.name;
-                document.getElementById('welcomeUserName').textContent = userData.name;
-            }
+        }
+        
+        // Перевіряємо авторизацію при завантаженні сторінки
+        let userData = {};
+        if (checkAuth()) {
+            // Якщо користувач авторизований, завантажуємо dashboard
+            userData = JSON.parse(localStorage.getItem('userData') || '{}');
+            showDashboard();
         }
     </script>
 </body>
