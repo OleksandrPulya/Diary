@@ -3,170 +3,770 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Головна сторінка - Auth App</title>
+    <title>Електронний щоденник</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-        }
-
-        body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            color: white;
+            padding: 20px 0;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+        }
+        
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: white;
+            color: #6a11cb;
             display: flex;
             align-items: center;
             justify-content: center;
+            font-weight: bold;
+        }
+        
+        .logout-btn {
+            background-color: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .logout-btn:hover {
+            background-color: rgba(255, 255, 255, 0.3);
+        }
+        
+        .dashboard-content {
+            margin-top: 30px;
+        }
+        
+        .welcome-message {
+            background-color: white;
             padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            margin-bottom: 30px;
         }
-
-        .container {
-            width: 100%;
-            max-width: 1200px;
-            margin: 0 auto;
+        
+        .tabs {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #ddd;
         }
-
-        /* Header */
-        header {
-            text-align: center;
-            margin-bottom: 40px;
+        
+        .tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            background: #f1f1f1;
+            border-radius: 5px 5px 0 0;
+            margin-right: 5px;
+        }
+        
+        .tab.active {
+            background: #6a11cb;
             color: white;
         }
-
-        header h1 {
-            font-size: 2.5rem;
-            margin-bottom: 10px;
+        
+        .tab-content {
+            display: none;
         }
-
-        header p {
-            font-size: 1.1rem;
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .homework-list, .schedule-list {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            margin-bottom: 30px;
+        }
+        
+        .homework-item, .schedule-item {
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .homework-item:last-child, .schedule-item:last-child {
+            border-bottom: none;
+        }
+        
+        .homework-subject {
+            font-weight: bold;
+            color: #6a11cb;
+        }
+        
+        .homework-date {
+            color: #777;
+            font-size: 14px;
+        }
+        
+        .homework-actions button {
+            background: #6a11cb;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-left: 5px;
+        }
+        
+        .add-form {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            margin-bottom: 30px;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #555;
+        }
+        
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        
+        .form-group textarea {
+            height: 100px;
+            resize: vertical;
+        }
+        
+        .form-btn {
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        
+        .schedule-day {
+            margin-bottom: 20px;
+        }
+        
+        .day-title {
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #6a11cb;
+        }
+        
+        .auth-container {
+            max-width: 400px;
+            margin: 100px auto;
+            padding: 30px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .auth-tabs {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .auth-tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            text-align: center;
+            flex: 1;
+            color: #777;
+        }
+        
+        .auth-tab.active {
+            color: #6a11cb;
+            border-bottom: 2px solid #6a11cb;
+            font-weight: bold;
+        }
+        
+        .form-title {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #444;
+        }
+        
+        .remember-me {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .remember-me input {
+            margin-right: 10px;
+        }
+        
+        .auth-btn {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: opacity 0.3s;
+        }
+        
+        .auth-btn:hover {
             opacity: 0.9;
         }
-
-        /* Auth Options */
-        .auth-options {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 30px;
-            margin-bottom: 40px;
-        }
-
-        .option-card {
-            background: white;
-            padding: 40px;
-            border-radius: 15px;
+        
+        .error-message {
+            color: #e74c3c;
             text-align: center;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-            transition: transform 0.3s ease;
+            margin-top: 15px;
+            display: none;
         }
-
-        .option-card:hover {
-            transform: translateY(-5px);
-        }
-
-        .option-card h2 {
-            color: #333;
-            margin-bottom: 15px;
-            font-size: 1.8rem;
-        }
-
-        .option-card p {
-            color: #666;
-            margin-bottom: 25px;
-        }
-
-        /* Buttons */
-        .btn {
-            display: inline-block;
-            padding: 12px 30px;
-            border: none;
-            border-radius: 8px;
-            font-size: 16px;
-            font-weight: 600;
-            text-decoration: none;
+        
+        .success-message {
+            color: #2ecc71;
             text-align: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
+            margin-top: 15px;
+            display: none;
         }
-
-        .btn-primary {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
-        }
-
-        .btn-secondary {
-            background: white;
-            color: #667eea;
-            border: 2px solid #667eea;
-        }
-
-        .btn-secondary:hover {
-            background: #667eea;
-            color: white;
-        }
-
-        /* Footer */
+        
         footer {
             text-align: center;
-            color: white;
-            margin-top: 40px;
+            margin-top: 50px;
+            padding: 20px;
+            color: #777;
+            border-top: 1px solid #eee;
         }
-
-        /* Responsive */
-        @media (max-width: 768px) {
-            .auth-options {
-                grid-template-columns: 1fr;
-            }
-            
-            .option-card {
-                padding: 30px;
-            }
-            
-            header h1 {
-                font-size: 2rem;
-            }
+        
+        .password-hint {
+            font-size: 12px;
+            color: #777;
+            margin-top: 5px;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 30px;
+            color: #777;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <header>
-            <h1>Ласкаво просимо!</h1>
-            <p>Оберіть дію для продовження</p>
-        </header>
-        
-        <div class="auth-options">
-            <div class="option-card">
-                <h2>Вхід</h2>
-                <p>Увійдіть у свій акаунт</p>
-                <a href="login.html" class="btn btn-primary">Увійти</a>
-            </div>
-            
-            <div class="option-card">
-                <h2>Реєстрація</h2>
-                <p>Створіть новий акаунт</p>
-                <a href="register.html" class="btn btn-secondary">Зареєструватися</a>
-            </div>
-        </div>
-        
-        <footer>
-            <p>&copy; 2024 Auth App. Усі права захищені.</p>
-        </footer>
-    </div>
+    <div id="app"></div>
 
     <script>
-        // Ініціалізація localStorage для зберігання користувачів
-        document.addEventListener('DOMContentLoaded', function() {
-            if (!localStorage.getItem('registeredUsers')) {
-                localStorage.setItem('registeredUsers', JSON.stringify([]));
+        // Глобальні змінні для зберігання даних
+        let userData = {};
+        let rememberedUser = null;
+        let currentView = 'auth';
+        
+        // Основні предмети для вибору
+        const subjects = [
+            "Українська мова",
+            "Українська література",
+            "Математика",
+            "Англійська мова",
+            "Історія України",
+            "Всесвітня історія",
+            "Фізика",
+            "Хімія",
+            "Біологія",
+            "Географія",
+            "Інформатика",
+            "Мистецтво",
+            "Фізкультура",
+            "Трудове навчання"
+        ];
+        
+        // Дні тижня для розкладу
+        const daysOfWeek = [
+            "Понеділок",
+            "Вівторок",
+            "Середа",
+            "Четвер",
+            "П'ятниця"
+        ];
+        
+        // Функція для ініціалізації додатка
+        function initApp() {
+            // Перевіряємо авторизацію при завантаженні сторінки
+            const token = localStorage.getItem('authToken');
+            userData = JSON.parse(localStorage.getItem('userData') || '{}');
+            
+            if (token) {
+                showDiary();
+            } else {
+                showAuth();
             }
-        });
+        }
+        
+        // Функція для відображення форми авторизації
+        function showAuth() {
+            currentView = 'auth';
+            rememberedUser = JSON.parse(localStorage.getItem('rememberedUser') || 'null');
+            
+            const app = document.getElementById('app');
+            app.innerHTML = `
+                <div class="auth-container">
+                    <div class="auth-tabs">
+                        <div class="auth-tab active" id="loginTab" onclick="switchTab('login')">Вхід</div>
+                        <div class="auth-tab" id="registerTab" onclick="switchTab('register')">Реєстрація</div>
+                    </div>
+                    
+                    <div id="loginForm">
+                        <h2 class="form-title">Вхід в систему</h2>
+                        <div class="form-group">
+                            <label for="loginEmail">Електронна пошта</label>
+                            <input type="email" id="loginEmail" placeholder="Введіть вашу пошту">
+                        </div>
+                        <div class="form-group">
+                            <label for="loginPassword">Пароль</label>
+                            <input type="password" id="loginPassword" placeholder="Введіть ваш пароль">
+                        </div>
+                        <div class="remember-me">
+                            <input type="checkbox" id="rememberMe">
+                            <label for="rememberMe">Запам'ятати мене</label>
+                        </div>
+                        <button class="auth-btn" onclick="login()">Увійти</button>
+                        <div class="error-message" id="loginError">Невірний email або пароль</div>
+                    </div>
+                    
+                    <div id="registerForm" style="display: none;">
+                        <h2 class="form-title">Реєстрація</h2>
+                        <div class="form-group">
+                            <label for="registerName">Ім'я</label>
+                            <input type="text" id="registerName" placeholder="Введіть ваше ім'я">
+                        </div>
+                        <div class="form-group">
+                            <label for="registerEmail">Електронна пошта</label>
+                            <input type="email" id="registerEmail" placeholder="Введіть вашу пошту">
+                        </div>
+                        <div class="form-group">
+                            <label for="registerPassword">Пароль</label>
+                            <input type="password" id="registerPassword" placeholder="Створіть пароль">
+                            <div class="password-hint">Пароль має містити принаймні 6 символів</div>
+                        </div>
+                        <button class="auth-btn" onclick="register()">Зареєструватися</button>
+                        <div class="error-message" id="registerError">Помилка реєстрації</div>
+                        <div class="success-message" id="registerSuccess">Реєстрація успішна! Можете увійти.</div>
+                    </div>
+                </div>
+                <footer class="container">
+                    <p>© 2023 Електронний щоденник. Всі права захищені</p>
+                </footer>
+            `;
+            
+            // Якщо є збережені дані користувача, заповнюємо поля
+            if (rememberedUser) {
+                document.getElementById('loginEmail').value = rememberedUser.email || '';
+                document.getElementById('loginPassword').value = rememberedUser.password || '';
+                document.getElementById('rememberMe').checked = true;
+            }
+        }
+        
+        // Функція для перемикання між вкладками входу та реєстрації
+        function switchTab(tab) {
+            if (tab === 'login') {
+                document.getElementById('loginTab').classList.add('active');
+                document.getElementById('registerTab').classList.remove('active');
+                document.getElementById('loginForm').style.display = 'block';
+                document.getElementById('registerForm').style.display = 'none';
+            } else {
+                document.getElementById('loginTab').classList.remove('active');
+                document.getElementById('registerTab').classList.add('active');
+                document.getElementById('loginForm').style.display = 'none';
+                document.getElementById('registerForm').style.display = 'block';
+            }
+        }
+        
+        // Функція для перевірки, чи email вже зареєстрований
+        function isEmailRegistered(email) {
+            // Отримуємо список користувачів з localStorage
+            const users = JSON.parse(localStorage.getItem('registeredUsers') || '[]');
+            
+            // Перевіряємо, чи існує користувач з таким email
+            return users.some(user => user.email === email);
+        }
+        
+        // Функція для реєстрації нового користувача
+        function register() {
+            const name = document.getElementById('registerName').value;
+            const email = document.getElementById('registerEmail').value;
+            const password = document.getElementById('registerPassword').value;
+            const errorElement = document.getElementById('registerError');
+            const successElement = document.getElementById('registerSuccess');
+            
+            // Ховаємо попередні повідомлення
+            errorElement.style.display = 'none';
+            successElement.style.display = 'none';
+            
+            // Валідація даних
+            if (!name || !email || !password) {
+                errorElement.textContent = 'Будь ласка, заповніть всі поля';
+                errorElement.style.display = 'block';
+                return;
+            }
+            
+            if (password.length < 6) {
+                errorElement.textContent = 'Пароль має містити принаймні 6 символів';
+                errorElement.style.display = 'block';
+                return;
+            }
+            
+            // Перевіряємо, чи email вже зареєстрований
+            if (isEmailRegistered(email)) {
+                errorElement.textContent = 'Користувач з таким email вже існує';
+                errorElement.style.display = 'block';
+                return;
+            }
+            
+            // Зберігаємо нового користувача
+            const users = JSON.parse(localStorage.getItem('registeredUsers') || '[]');
+            users.push({ name, email, password });
+            localStorage.setItem('registeredUsers', JSON.stringify(users));
+            
+            // Показуємо повідомлення про успіх
+            successElement.style.display = 'block';
+            
+            // Очищаємо поля форми
+            document.getElementById('registerName').value = '';
+            document.getElementById('registerEmail').value = '';
+            document.getElementById('registerPassword').value = '';
+            
+            // Перемикаємо на вкладку входу через 2 секунди
+            setTimeout(() => switchTab('login'), 2000);
+        }
+        
+        // Функція для входу в систему
+        function login() {
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+            const rememberMe = document.getElementById('rememberMe').checked;
+            const errorElement = document.getElementById('loginError');
+            
+            // Отримуємо список зареєстрованих користувачів
+            const users = JSON.parse(localStorage.getItem('registeredUsers') || '[]');
+            
+            // Шукаємо користувача з відповідним email та паролем
+            const user = users.find(u => u.email === email && u.password === password);
+            
+            if (user) {
+                // Зберігаємо токен та дані користувача
+                localStorage.setItem('authToken', 'fake-jwt-token-' + Math.random().toString(36).substr(2));
+                localStorage.setItem('userData', JSON.stringify({
+                    name: user.name,
+                    email: user.email
+                }));
+                
+                // Якщо користувач хоче, щоб його запам'ятали
+                if (rememberMe) {
+                    localStorage.setItem('rememberedUser', JSON.stringify({
+                        email: user.email,
+                        password: user.password
+                    }));
+                } else {
+                    // Якщо не хоче - видаляємо збережені дані
+                    localStorage.removeItem('rememberedUser');
+                }
+                
+                // Переходимо на сторінку щоденника
+                showDiary();
+            } else {
+                errorElement.textContent = 'Невірний email або пароль';
+                errorElement.style.display = 'block';
+            }
+        }
+        
+        // Функція для виходу з системи
+        function logout() {
+            localStorage.removeItem('authToken');
+            localStorage.removeItem('userData');
+            showAuth();
+        }
+        
+        // Функція для відображення електронного щоденника
+        function showDiary() {
+            currentView = 'diary';
+            userData = JSON.parse(localStorage.getItem('userData') || '{}');
+            
+            // Отримуємо домашні завдання та розклад для поточного користувача
+            const userEmail = userData.email;
+            const homeworks = JSON.parse(localStorage.getItem(`homeworks_${userEmail}`) || '[]');
+            const schedule = JSON.parse(localStorage.getItem(`schedule_${userEmail}`) || '[]');
+            
+            const app = document.getElementById('app');
+            app.innerHTML = `
+                <header>
+                    <div class="container header-content">
+                        <div class="logo">Електронний щоденник</div>
+                        <div class="user-info">
+                            <div class="user-avatar">${userData.name ? userData.name.charAt(0).toUpperCase() : 'U'}</div>
+                            <span id="userName">${userData.name || 'Користувач'}</span>
+                            <button class="logout-btn" onclick="logout()">Вийти</button>
+                        </div>
+                    </div>
+                </header>
+                
+                <div class="container dashboard-content">
+                    <div class="welcome-message">
+                        <h1>Ласкаво просимо, <span id="welcomeUserName">${userData.name || 'Користувач'}</span>!</h1>
+                        <p>Це ваш електронний щоденник. Тут ви можете записувати домашні завдання та переглядати свій розклад.</p>
+                    </div>
+                    
+                    <div class="tabs">
+                        <div class="tab active" onclick="switchDiaryTab('homework')">Домашні завдання</div>
+                        <div class="tab" onclick="switchDiaryTab('schedule')">Розклад занять</div>
+                    </div>
+                    
+                    <div id="homeworkTab" class="tab-content active">
+                        <div class="add-form">
+                            <h2>Додати домашнє завдання</h2>
+                            <div class="form-group">
+                                <label for="hwSubject">Предмет</label>
+                                <select id="hwSubject">
+                                    <option value="">Оберіть предмет</option>
+                                    ${subjects.map(subject => `<option value="${subject}">${subject}</option>`).join('')}
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="hwTask">Завдання</label>
+                                <textarea id="hwTask" placeholder="Опишіть завдання"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="hwDate">Дата здачі</label>
+                                <input type="date" id="hwDate">
+                            </div>
+                            <button class="form-btn" onclick="addHomework()">Додати завдання</button>
+                        </div>
+                        
+                        <div class="homework-list">
+                            <h2>Мої домашні завдання</h2>
+                            ${homeworks.length > 0 ? homeworks.map((hw, index) => `
+                                <div class="homework-item">
+                                    <div>
+                                        <div class="homework-subject">${hw.subject}</div>
+                                        <div>${hw.task}</div>
+                                        <div class="homework-date">Термін здачі: ${hw.date}</div>
+                                    </div>
+                                    <div class="homework-actions">
+                                        <button onclick="deleteHomework(${index})">Видалити</button>
+                                    </div>
+                                </div>
+                            `).join('') : '<div class="empty-state">Немає домашніх завдань</div>'}
+                        </div>
+                    </div>
+                    
+                    <div id="scheduleTab" class="tab-content">
+                        <div class="add-form">
+                            <h2>Додати урок до розкладу</h2>
+                            <div class="form-group">
+                                <label for="schDay">День тижня</label>
+                                <select id="schDay">
+                                    <option value="">Оберіть день</option>
+                                    ${daysOfWeek.map(day => `<option value="${day}">${day}</option>`).join('')}
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="schNumber">Номер уроку</label>
+                                <select id="schNumber">
+                                    <option value="">Оберіть номер</option>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                    <option value="4">4</option>
+                                    <option value="5">5</option>
+                                    <option value="6">6</option>
+                                    <option value="7">7</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="schSubject">Предмет</label>
+                                <select id="schSubject">
+                                    <option value="">Оберіть предмет</option>
+                                    ${subjects.map(subject => `<option value="${subject}">${subject}</option>`).join('')}
+                                </select>
+                            </div>
+                            <button class="form-btn" onclick="addScheduleItem()">Додати урок</button>
+                        </div>
+                        
+                        <div class="schedule-list">
+                            <h2>Мій розклад занять</h2>
+                            ${schedule.length > 0 ? daysOfWeek.map(day => {
+                                const dayLessons = schedule.filter(item => item.day === day)
+                                    .sort((a, b) => a.number - b.number);
+                                
+                                return `
+                                    <div class="schedule-day">
+                                        <div class="day-title">${day}</div>
+                                        ${dayLessons.length > 0 ? dayLessons.map((lesson, index) => `
+                                            <div class="schedule-item">
+                                                <div>${lesson.number} урок: ${lesson.subject}</div>
+                                                <div class="homework-actions">
+                                                    <button onclick="deleteScheduleItem('${day}', ${lesson.number})">Видалити</button>
+                                                </div>
+                                            </div>
+                                        `).join('') : '<div>Немає уроків</div>'}
+                                    </div>
+                                `;
+                            }).join('') : '<div class="empty-state">Розклад не заповнений</div>'}
+                        </div>
+                    </div>
+                </div>
+                
+                <footer class="container">
+                    <p>© 2023 Електронний щоденник. Всі права захищені</p>
+                </footer>
+            `;
+        }
+        
+        // Функція для перемикання між вкладками щоденника
+        function switchDiaryTab(tab) {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+            
+            if (tab === 'homework') {
+                document.querySelector('.tab:nth-child(1)').classList.add('active');
+                document.getElementById('homeworkTab').classList.add('active');
+            } else {
+                document.querySelector('.tab:nth-child(2)').classList.add('active');
+                document.getElementById('scheduleTab').classList.add('active');
+            }
+        }
+        
+        // Функція для додавання домашнього завдання
+        function addHomework() {
+            const subject = document.getElementById('hwSubject').value;
+            const task = document.getElementById('hwTask').value;
+            const date = document.getElementById('hwDate').value;
+            
+            if (!subject || !task || !date) {
+                alert('Будь ласка, заповніть всі поля');
+                return;
+            }
+            
+            const userEmail = userData.email;
+            const homeworks = JSON.parse(localStorage.getItem(`homeworks_${userEmail}`) || '[]');
+            
+            homeworks.push({
+                subject,
+                task,
+                date
+            });
+            
+            localStorage.setItem(`homeworks_${userEmail}`, JSON.stringify(homeworks));
+            
+            // Оновлюємо відображення
+            showDiary();
+        }
+        
+        // Функція для видалення домашнього завдання
+        function deleteHomework(index) {
+            const userEmail = userData.email;
+            const homeworks = JSON.parse(localStorage.getItem(`homeworks_${userEmail}`) || '[]');
+            
+            homeworks.splice(index, 1);
+            localStorage.setItem(`homeworks_${userEmail}`, JSON.stringify(homeworks));
+            
+            // Оновлюємо відображення
+            showDiary();
+        }
+        
+        // Функція для додавання уроку до розкладу
+        function addScheduleItem() {
+            const day = document.getElementById('schDay').value;
+            const number = document.getElementById('schNumber').value;
+            const subject = document.getElementById('schSubject').value;
+            
+            if (!day || !number || !subject) {
+                alert('Будь ласка, заповніть всі поля');
+                return;
+            }
+            
+            const userEmail = userData.email;
+            const schedule = JSON.parse(localStorage.getItem(`schedule_${userEmail}`) || '[]');
+            
+            // Перевіряємо, чи не існує вже урок з таким номером у цей день
+            const existingIndex = schedule.findIndex(item => item.day === day && item.number === number);
+            
+            if (existingIndex !== -1) {
+                schedule[existingIndex].subject = subject;
+            } else {
+                schedule.push({
+                    day,
+                    number,
+                    subject
+                });
+            }
+            
+            localStorage.setItem(`schedule_${userEmail}`, JSON.stringify(schedule));
+            
+            // Оновлюємо відображення
+            showDiary();
+        }
+        
+        // Функція для видалення уроку з розкладу
+        function deleteScheduleItem(day, number) {
+            const userEmail = userData.email;
+            const schedule = JSON.parse(localStorage.getItem(`schedule_${userEmail}`) || '[]');
+            
+            const updatedSchedule = schedule.filter(item => !(item.day === day && item.number == number));
+            localStorage.setItem(`schedule_${userEmail}`, JSON.stringify(updatedSchedule));
+            
+            // Оновлюємо відображення
+            showDiary();
+        }
+        
+        // Ініціалізуємо додаток при завантаженні сторінки
+        initApp();
     </script>
 </body>
 </html>
