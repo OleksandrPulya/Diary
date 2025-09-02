@@ -29,6 +29,7 @@
             color: white;
             padding: 20px 0;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            position: relative;
         }
         
         .header-content {
@@ -37,9 +38,21 @@
             align-items: center;
         }
         
+        .burger-menu {
+            font-size: 24px;
+            cursor: pointer;
+            background: none;
+            border: none;
+            color: white;
+            padding: 5px 10px;
+        }
+        
         .logo {
             font-size: 24px;
             font-weight: bold;
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
         }
         
         .user-info {
@@ -58,6 +71,14 @@
             align-items: center;
             justify-content: center;
             font-weight: bold;
+            cursor: pointer;
+            overflow: hidden;
+        }
+        
+        .user-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
         
         .logout-btn {
@@ -74,8 +95,60 @@
             background-color: rgba(255, 255, 255, 0.3);
         }
         
-        .dashboard-content {
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: -250px;
+            width: 250px;
+            height: 100%;
+            background: white;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+            transition: left 0.3s ease;
+            z-index: 1000;
+            padding-top: 60px;
+        }
+        
+        .sidebar.open {
+            left: 0;
+        }
+        
+        .sidebar-menu {
+            list-style: none;
+        }
+        
+        .sidebar-menu li {
+            padding: 15px 20px;
+            border-bottom: 1px solid #eee;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .sidebar-menu li:hover {
+            background-color: #f5f7fa;
+        }
+        
+        .sidebar-menu li.active {
+            background-color: #6a11cb;
+            color: white;
+        }
+        
+        .close-sidebar {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            font-size: 24px;
+            cursor: pointer;
+            background: none;
+            border: none;
+        }
+        
+        .main-content {
             margin-top: 30px;
+            transition: margin-left 0.3s ease;
+        }
+        
+        .main-content.sidebar-open {
+            margin-left: 250px;
         }
         
         .welcome-message {
@@ -86,25 +159,6 @@
             margin-bottom: 30px;
         }
         
-        .tabs {
-            display: flex;
-            margin-bottom: 20px;
-            border-bottom: 1px solid #ddd;
-        }
-        
-        .tab {
-            padding: 10px 20px;
-            cursor: pointer;
-            background: #f1f1f1;
-            border-radius: 5px 5px 0 0;
-            margin-right: 5px;
-        }
-        
-        .tab.active {
-            background: #6a11cb;
-            color: white;
-        }
-        
         .tab-content {
             display: none;
         }
@@ -113,7 +167,7 @@
             display: block;
         }
         
-        .homework-list, .schedule-list {
+        .homework-list, .schedule-list, .profile-content {
             background-color: white;
             padding: 20px;
             border-radius: 8px;
@@ -298,16 +352,63 @@
             padding: 30px;
             color: #777;
         }
+        
+        .profile-avatar {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .profile-avatar-img {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 10px;
+            border: 3px solid #6a11cb;
+        }
+        
+        .avatar-upload {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .avatar-upload-btn {
+            background: #6a11cb;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+        }
+        
+        .overlay.active {
+            display: block;
+        }
     </style>
 </head>
 <body>
     <div id="app"></div>
+    <div class="overlay" id="overlay"></div>
 
     <script>
         // Глобальні змінні для зберігання даних
         let userData = {};
         let rememberedUser = null;
         let currentView = 'auth';
+        let currentTab = 'homework';
         
         // Основні предмети для вибору
         const subjects = [
@@ -471,7 +572,7 @@
             
             // Зберігаємо нового користувача
             const users = JSON.parse(localStorage.getItem('registeredUsers') || '[]');
-            users.push({ name, email, password });
+            users.push({ name, email, password, avatar: '' });
             localStorage.setItem('registeredUsers', JSON.stringify(users));
             
             // Показуємо повідомлення про успіх
@@ -504,7 +605,8 @@
                 localStorage.setItem('authToken', 'fake-jwt-token-' + Math.random().toString(36).substr(2));
                 localStorage.setItem('userData', JSON.stringify({
                     name: user.name,
-                    email: user.email
+                    email: user.email,
+                    avatar: user.avatar || ''
                 }));
                 
                 // Якщо користувач хоче, щоб його запам'ятали
@@ -533,6 +635,42 @@
             showAuth();
         }
         
+        // Функція для відкриття/закриття бургер-меню
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('overlay');
+            const mainContent = document.querySelector('.main-content');
+            
+            sidebar.classList.toggle('open');
+            overlay.classList.toggle('active');
+            
+            if (window.innerWidth > 768) {
+                mainContent.classList.toggle('sidebar-open');
+            }
+        }
+        
+        // Функція для перемикання між розділами
+        function switchSection(section) {
+            currentTab = section;
+            
+            // Оновлюємо активний пункт меню
+            document.querySelectorAll('.sidebar-menu li').forEach(item => {
+                item.classList.remove('active');
+            });
+            document.querySelector(`.sidebar-menu li[onclick="switchSection('${section}')"]`).classList.add('active');
+            
+            // Приховуємо всі вкладки і показуємо потрібну
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.getElementById(`${section}Tab`).classList.add('active');
+            
+            // Закриваємо меню на мобільних пристроях
+            if (window.innerWidth <= 768) {
+                toggleSidebar();
+            }
+        }
+        
         // Функція для відображення електронного щоденника
         function showDiary() {
             currentView = 'diary';
@@ -547,27 +685,34 @@
             app.innerHTML = `
                 <header>
                     <div class="container header-content">
+                        <button class="burger-menu" onclick="toggleSidebar()">☰</button>
                         <div class="logo">Електронний щоденник</div>
                         <div class="user-info">
-                            <div class="user-avatar">${userData.name ? userData.name.charAt(0).toUpperCase() : 'U'}</div>
+                            <div class="user-avatar" onclick="switchSection('profile')">
+                                ${userData.avatar ? `<img src="${userData.avatar}" alt="Аватар">` : userData.name ? userData.name.charAt(0).toUpperCase() : 'U'}
+                            </div>
                             <span id="userName">${userData.name || 'Користувач'}</span>
                             <button class="logout-btn" onclick="logout()">Вийти</button>
                         </div>
                     </div>
                 </header>
                 
-                <div class="container dashboard-content">
-                    <div class="welcome-message">
-                        <h1>Ласкаво просимо, <span id="welcomeUserName">${userData.name || 'Користувач'}</span>!</h1>
-                        <p>Це ваш електронний щоденник. Тут ви можете записувати домашні завдання та переглядати свій розклад.</p>
-                    </div>
-                    
-                    <div class="tabs">
-                        <div class="tab active" onclick="switchDiaryTab('homework')">Домашні завдання</div>
-                        <div class="tab" onclick="switchDiaryTab('schedule')">Розклад занять</div>
-                    </div>
-                    
-                    <div id="homeworkTab" class="tab-content active">
+                <div class="sidebar" id="sidebar">
+                    <button class="close-sidebar" onclick="toggleSidebar()">×</button>
+                    <ul class="sidebar-menu">
+                        <li onclick="switchSection('homework')" class="${currentTab === 'homework' ? 'active' : ''}">Домашнє завдання</li>
+                        <li onclick="switchSection('schedule')" class="${currentTab === 'schedule' ? 'active' : ''}">Розклад уроків</li>
+                        <li onclick="switchSection('profile')" class="${currentTab === 'profile' ? 'active' : ''}">Профіль</li>
+                    </ul>
+                </div>
+                
+                <div class="container main-content">
+                    <div id="homeworkTab" class="tab-content ${currentTab === 'homework' ? 'active' : ''}">
+                        <div class="welcome-message">
+                            <h1>Ласкаво просимо, <span id="welcomeUserName">${userData.name || 'Користувач'}</span>!</h1>
+                            <p>Тут ви можете керувати своїми домашніми завданнями.</p>
+                        </div>
+                        
                         <div class="add-form">
                             <h2>Додати домашнє завдання</h2>
                             <div class="form-group">
@@ -605,7 +750,12 @@
                         </div>
                     </div>
                     
-                    <div id="scheduleTab" class="tab-content">
+                    <div id="scheduleTab" class="tab-content ${currentTab === 'schedule' ? 'active' : ''}">
+                        <div class="welcome-message">
+                            <h1>Розклад занять, <span id="welcomeUserName">${userData.name || 'Користувач'}</span>!</h1>
+                            <p>Тут ви можете керувати своїм розкладом уроків.</p>
+                        </div>
+                        
                         <div class="add-form">
                             <h2>Додати урок до розкладу</h2>
                             <div class="form-group">
@@ -660,26 +810,59 @@
                             }).join('') : '<div class="empty-state">Розклад не заповнений</div>'}
                         </div>
                     </div>
+                    
+                    <div id="profileTab" class="tab-content ${currentTab === 'profile' ? 'active' : ''}">
+                        <div class="welcome-message">
+                            <h1>Ваш профіль, <span id="welcomeUserName">${userData.name || 'Користувач'}</span>!</h1>
+                            <p>Тут ви можете змінити свої дані.</p>
+                        </div>
+                        
+                        <div class="profile-content">
+                            <div class="profile-avatar">
+                                <div class="avatar-upload">
+                                    ${userData.avatar ? 
+                                        `<img src="${userData.avatar}" alt="Аватар" class="profile-avatar-img">` : 
+                                        `<div class="profile-avatar-img" style="background: #6a11cb; color: white; display: flex; align-items: center; justify-content: center; font-size: 40px;">
+                                            ${userData.name ? userData.name.charAt(0).toUpperCase() : 'U'}
+                                        </div>`
+                                    }
+                                    <input type="file" id="avatarInput" accept="image/*" style="display: none;" onchange="updateAvatar()">
+                                    <button class="avatar-upload-btn" onclick="document.getElementById('avatarInput').click()">Змінити аватар</button>
+                                </div>
+                            </div>
+                            
+                            <div class="add-form">
+                                <h2>Змінити дані профілю</h2>
+                                <div class="form-group">
+                                    <label for="profileName">Ім'я</label>
+                                    <input type="text" id="profileName" value="${userData.name || ''}">
+                                </div>
+                                <div class="form-group">
+                                    <label for="profileEmail">Електронна пошта</label>
+                                    <input type="email" id="profileEmail" value="${userData.email || ''}" disabled>
+                                    <div class="password-hint">Email не можна змінити</div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="profilePassword">Новий пароль</label>
+                                    <input type="password" id="profilePassword" placeholder="Введіть новий пароль">
+                                    <div class="password-hint">Залиште порожнім, якщо не хочете змінювати пароль</div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="profilePasswordConfirm">Підтвердження пароля</label>
+                                    <input type="password" id="profilePasswordConfirm" placeholder="Підтвердьте новий пароль">
+                                </div>
+                                <button class="form-btn" onclick="updateProfile()">Зберегти зміни</button>
+                                <div class="error-message" id="profileError"></div>
+                                <div class="success-message" id="profileSuccess"></div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 
                 <footer class="container">
                     <p>© 2023 Електронний щоденник. Всі права захищені</p>
                 </footer>
             `;
-        }
-        
-        // Функція для перемикання між вкладками щоденника
-        function switchDiaryTab(tab) {
-            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
-            
-            if (tab === 'homework') {
-                document.querySelector('.tab:nth-child(1)').classList.add('active');
-                document.getElementById('homeworkTab').classList.add('active');
-            } else {
-                document.querySelector('.tab:nth-child(2)').classList.add('active');
-                document.getElementById('scheduleTab').classList.add('active');
-            }
         }
         
         // Функція для додавання домашнього завдання
@@ -706,6 +889,7 @@
             
             // Оновлюємо відображення
             showDiary();
+            switchSection('homework');
         }
         
         // Функція для видалення домашнього завдання
@@ -718,6 +902,7 @@
             
             // Оновлюємо відображення
             showDiary();
+            switchSection('homework');
         }
         
         // Функція для додавання уроку до розкладу
@@ -751,6 +936,7 @@
             
             // Оновлюємо відображення
             showDiary();
+            switchSection('schedule');
         }
         
         // Функція для видалення уроку з розкладу
@@ -763,6 +949,97 @@
             
             // Оновлюємо відображення
             showDiary();
+            switchSection('schedule');
+        }
+        
+        // Функція для оновлення аватара
+        function updateAvatar() {
+            const fileInput = document.getElementById('avatarInput');
+            const file = fileInput.files[0];
+            
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const avatarDataUrl = e.target.result;
+                    
+                    // Оновлюємо аватар у даних користувача
+                    userData.avatar = avatarDataUrl;
+                    localStorage.setItem('userData', JSON.stringify(userData));
+                    
+                    // Оновлюємо аватар у списку користувачів
+                    const users = JSON.parse(localStorage.getItem('registeredUsers') || '[]');
+                    const userIndex = users.findIndex(u => u.email === userData.email);
+                    
+                    if (userIndex !== -1) {
+                        users[userIndex].avatar = avatarDataUrl;
+                        localStorage.setItem('registeredUsers', JSON.stringify(users));
+                    }
+                    
+                    // Оновлюємо відображення
+                    showDiary();
+                    switchSection('profile');
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+        
+        // Функція для оновлення профілю
+        function updateProfile() {
+            const name = document.getElementById('profileName').value;
+            const password = document.getElementById('profilePassword').value;
+            const passwordConfirm = document.getElementById('profilePasswordConfirm').value;
+            const errorElement = document.getElementById('profileError');
+            const successElement = document.getElementById('profileSuccess');
+            
+            // Ховаємо попередні повідомлення
+            errorElement.style.display = 'none';
+            successElement.style.display = 'none';
+            
+            // Валідація даних
+            if (!name) {
+                errorElement.textContent = 'Ім\'я не може бути порожнім';
+                errorElement.style.display = 'block';
+                return;
+            }
+            
+            if (password && password !== passwordConfirm) {
+                errorElement.textContent = 'Паролі не співпадають';
+                errorElement.style.display = 'block';
+                return;
+            }
+            
+            if (password && password.length < 6) {
+                errorElement.textContent = 'Пароль має містити принаймні 6 символів';
+                errorElement.style.display = 'block';
+                return;
+            }
+            
+            // Оновлюємо дані користувача
+            userData.name = name;
+            localStorage.setItem('userData', JSON.stringify(userData));
+            
+            // Оновлюємо дані у списку користувачів
+            const users = JSON.parse(localStorage.getItem('registeredUsers') || '[]');
+            const userIndex = users.findIndex(u => u.email === userData.email);
+            
+            if (userIndex !== -1) {
+                users[userIndex].name = name;
+                
+                // Якщо введено новий пароль, оновлюємо його
+                if (password) {
+                    users[userIndex].password = password;
+                }
+                
+                localStorage.setItem('registeredUsers', JSON.stringify(users));
+            }
+            
+            // Показуємо повідомлення про успіх
+            successElement.textContent = 'Дані успішно оновлено';
+            successElement.style.display = 'block';
+            
+            // Оновлюємо відображення
+            showDiary();
+            switchSection('profile');
         }
         
         // Ініціалізуємо додаток при завантаженні сторінки
