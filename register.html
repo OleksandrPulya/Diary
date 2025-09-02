@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Реєстрація - Auth App</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Auth Form */
+        .auth-form {
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 450px;
+            margin: 0 auto;
+        }
+
+        .form-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .form-header h1 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 2rem;
+        }
+
+        .form-header p {
+            color: #666;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 500;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .form-group input.error {
+            border-color: #ff4757;
+        }
+
+        .error-message {
+            color: #ff4757;
+            font-size: 14px;
+            margin-top: 5px;
+            display: none;
+        }
+
+        .checkbox {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #666;
+        }
+
+        .auth-links {
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        .auth-links p {
+            margin-bottom: 10px;
+            color: #666;
+        }
+
+        .auth-links a {
+            color: #667eea;
+            text-decoration: none;
+        }
+
+        .auth-links a:hover {
+            text-decoration: underline;
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-block;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            text-decoration: none;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-full {
+            width: 100%;
+            margin-bottom: 20px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .auth-form {
+                padding: 30px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="auth-form">
+            <div class="form-header">
+                <h1>Реєстрація</h1>
+                <p>Створіть новий акаунт</p>
+            </div>
+            
+            <form id="registerForm">
+                <div class="form-group">
+                    <label for="fullName">Повне ім'я:</label>
+                    <input type="text" id="fullName" name="fullName" required>
+                    <div class="error-message" id="fullNameError">Будь ласка, введіть ваше ім'я</div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="regEmail">Електронна пошта:</label>
+                    <input type="email" id="regEmail" name="email" required>
+                    <div class="error-message" id="emailError">Будь ласка, введіть коректну email адресу</div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="regPassword">Пароль:</label>
+                    <input type="password" id="regPassword" name="password" required minlength="6">
+                    <div class="error-message" id="passwordError">Пароль повинен містити щонайменше 6 символів</div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="confirmPassword">Підтвердіть пароль:</label>
+                    <input type="password" id="confirmPassword" name="confirmPassword" required>
+                    <div class="error-message" id="confirmPasswordError">Паролі не співпадають</div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="checkbox">
+                        <input type="checkbox" name="terms" id="terms" required>
+                        <span>Я погоджуюсь з <a href="#">умовами використання</a></span>
+                    </label>
+                    <div class="error-message" id="termsError">Будь ласка, погодьтесь з умовами</div>
+                </div>
+                
+                <button type="submit" class="btn btn-primary btn-full">Зареєструватися</button>
+            </form>
+            
+            <div class="auth-links">
+                <p>Вже маєте акаунт? <a href="login.html">Увійти</a></p>
+                <p><a href="index.html">← Повернутися на головну</a></p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const registerForm = document.getElementById('registerForm');
+            const inputs = {
+                fullName: document.getElementById('fullName'),
+                email: document.getElementById('regEmail'),
+                password: document.getElementById('regPassword'),
+                confirmPassword: document.getElementById('confirmPassword'),
+                terms: document.getElementById('terms')
+            };
+
+            const errors = {
+                fullName: document.getElementById('fullNameError'),
+                email: document.getElementById('emailError'),
+                password: document.getElementById('passwordError'),
+                confirmPassword: document.getElementById('confirmPasswordError'),
+                terms: document.getElementById('termsError')
+            };
+
+            // Real-time validation
+            inputs.confirmPassword.addEventListener('input', function() {
+                validatePasswordMatch();
+            });
+
+            inputs.password.addEventListener('input', function() {
+                validatePassword();
+                validatePasswordMatch();
+            });
+
+            inputs.email.addEventListener('blur', function() {
+                validateEmail();
+            });
+
+            function validateEmail() {
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (!emailRegex.test(inputs.email.value)) {
+                    showError(inputs.email, errors.email, 'Будь ласка, введіть коректну email адресу');
+                    return false;
+                } else {
+                    hideError(inputs.email, errors.email);
+                    return true;
+                }
+            }
+
+            function validatePassword() {
+                if (inputs.password.value.length < 6) {
+                    showError(inputs.password, errors.password, 'Пароль повинен містити щонайменше 6 символів');
+                    return false;
+                } else {
+                    hideError(inputs.password, errors.password);
+                    return true;
+                }
+            }
+
+            function validatePasswordMatch() {
+                if (inputs.password.value !== inputs.confirmPassword.value) {
+                    showError(inputs.confirmPassword, errors.confirmPassword, 'Паролі не співпадають');
+                    return false;
+                } else {
+                    hideError(inputs.confirmPassword, errors.confirmPassword);
+                    return true;
+                }
+            }
+
+            function showError(input, errorElement, message) {
+                input.classList.add('error');
+                errorElement.textContent = message;
+                errorElement.style.display = 'block';
+            }
+
+            function hideError(input, errorElement) {
+                input.classList.remove('error');
+                errorElement.style.display = 'none';
+            }
+
+            if (registerForm) {
+                registerForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    
+                    let isValid = true;
+
+                    // Validate all fields
+                    if (!inputs.fullName.value.trim()) {
+                        showError(inputs.fullName, errors.fullName, 'Будь ласка, введіть ваше ім\'я');
+                        isValid = false;
+                    } else {
+                        hideError(inputs.fullName, errors.fullName);
+                    }
+
+                    if (!validateEmail()) isValid = false;
+                    if (!validatePassword()) isValid = false;
+                    if (!validatePasswordMatch()) isValid = false;
+
+                    if (!inputs.terms.checked) {
+                        errors.terms.style.display = 'block';
+                        isValid = false;
+                    } else {
+                        errors.terms.style.display = 'none';
+                    }
+
+                    if (!isValid) {
+                        alert('Будь ласка, виправте помилки в формі');
+                        return;
+                    }
+
+                    // Simulate registration process
+                    console.log('Registration attempt:', {
+                        fullName: inputs.fullName.value,
+                        email: inputs.email.value,
+                        password: inputs.password.value
+                    });
+
+                    // Redirect to login page
+                    alert('Реєстрація успішна! Тепер ви можете увійти.');
+                    window.location.href = 'login.html';
+                });
+            }
+        });
+    </script>
+</body>
+</html>
