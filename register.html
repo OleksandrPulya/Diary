@@ -55,6 +55,7 @@
 
         .form-group {
             margin-bottom: 20px;
+            position: relative;
         }
 
         .form-group label {
@@ -82,11 +83,69 @@
             border-color: #ff4757;
         }
 
+        .form-group input.warning {
+            border-color: #ffa502;
+        }
+
+        .form-group input.success {
+            border-color: #2ed573;
+        }
+
         .error-message {
             color: #ff4757;
             font-size: 14px;
             margin-top: 5px;
             display: none;
+        }
+
+        .password-strength {
+            margin-top: 10px;
+            height: 5px;
+            border-radius: 3px;
+            background: #ddd;
+            overflow: hidden;
+        }
+
+        .strength-meter {
+            height: 100%;
+            width: 0%;
+            transition: all 0.3s ease;
+        }
+
+        .strength-text {
+            font-size: 14px;
+            margin-top: 5px;
+            font-weight: 500;
+        }
+
+        .strength-very-weak { color: #ff4757; }
+        .strength-weak { color: #ff6b81; }
+        .strength-medium { color: #ffa502; }
+        .strength-strong { color: #2ed573; }
+        .strength-very-strong { color: #1e90ff; }
+
+        .password-requirements {
+            margin-top: 10px;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+
+        .requirement {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 5px;
+            color: #666;
+        }
+
+        .requirement.fulfilled {
+            color: #2ed573;
+        }
+
+        .requirement.unfulfilled {
+            color: #ff4757;
         }
 
         .checkbox {
@@ -176,7 +235,32 @@
                 <div class="form-group">
                     <label for="regPassword">Пароль:</label>
                     <input type="password" id="regPassword" name="password" required minlength="6">
-                    <div class="error-message" id="passwordError">Пароль повинен містити щонайменше 6 символів</div>
+                    
+                    <div class="password-strength">
+                        <div class="strength-meter" id="strengthMeter"></div>
+                    </div>
+                    
+                    <div class="strength-text" id="strengthText">Надійність пароля</div>
+                    
+                    <div class="password-requirements">
+                        <div class="requirement" id="reqLength">
+                            <span>✓</span> Мінімум 8 символів
+                        </div>
+                        <div class="requirement" id="reqLowercase">
+                            <span>✓</span> Мінімум 1 мала літера
+                        </div>
+                        <div class="requirement" id="reqUppercase">
+                            <span>✓</span> Мінімум 1 велика літера
+                        </div>
+                        <div class="requirement" id="reqNumber">
+                            <span>✓</span> Мінімум 1 цифра
+                        </div>
+                        <div class="requirement" id="reqSpecial">
+                            <span>✓</span> Мінімум 1 спецсимвол (!@#$%^&*)
+                        </div>
+                    </div>
+                    
+                    <div class="error-message" id="passwordError">Пароль занадто слабкий</div>
                 </div>
                 
                 <div class="form-group">
@@ -206,10 +290,14 @@
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const registerForm = document.getElementById('registerForm');
+            const passwordInput = document.getElementById('regPassword');
+            const strengthMeter = document.getElementById('strengthMeter');
+            const strengthText = document.getElementById('strengthText');
+            
             const inputs = {
                 fullName: document.getElementById('fullName'),
                 email: document.getElementById('regEmail'),
-                password: document.getElementById('regPassword'),
+                password: passwordInput,
                 confirmPassword: document.getElementById('confirmPassword'),
                 terms: document.getElementById('terms')
             };
@@ -222,19 +310,142 @@
                 terms: document.getElementById('termsError')
             };
 
-            // Real-time validation
-            inputs.confirmPassword.addEventListener('input', function() {
+            const requirements = {
+                length: document.getElementById('reqLength'),
+                lowercase: document.getElementById('reqLowercase'),
+                uppercase: document.getElementById('reqUppercase'),
+                number: document.getElementById('reqNumber'),
+                special: document.getElementById('reqSpecial')
+            };
+
+            // Password strength checker
+            function checkPasswordStrength(password) {
+                let strength = 0;
+                let messages = [];
+                
+                // Length check
+                if (password.length === 0) {
+                    return { score: 0, message: 'Введіть пароль' };
+                }
+                
+                if (password.length < 4) {
+                    return { score: 1, message: 'Дуже короткий пароль' };
+                }
+                
+                if (password.length >= 8) strength += 1;
+                if (password.length >= 12) strength += 1;
+                
+                // Character variety
+                if (/[a-z]/.test(password)) strength += 1;
+                if (/[A-Z]/.test(password)) strength += 1;
+                if (/[0-9]/.test(password)) strength += 1;
+                if (/[^A-Za-z0-9]/.test(password)) strength += 2;
+                
+                // Common weak passwords
+                const weakPasswords = [
+                    'password', '123456', 'qwerty', 'admin', 'welcome',
+                    '12345678', '111111', '123123', '123456789', 'password1'
+                ];
+                
+                if (weakPasswords.includes(password.toLowerCase())) {
+                    strength = 1;
+                    messages.push('Цей пароль дуже поширений');
+                }
+                
+                // Sequential characters
+                if (/(abc|bcd|cde|def|efg|fgh|ghi|hij|ijk|jkl|klm|lmn|mno|nop|opq|pqr|qrs|rst|stu|tuv|uvw|vwx|wxy|xyz)/i.test(password)) {
+                    strength = Math.max(1, strength - 1);
+                    messages.push('Уникайте послідовних символів');
+                }
+                
+                // Repeated characters
+                if (/(.)\1{2,}/.test(password)) {
+                    strength = Math.max(1, strength - 1);
+                    messages.push('Уникайте повторюваних символів');
+                }
+                
+                // Determine strength level
+                let message = '';
+                let percentage = 0;
+                
+                if (strength <= 2) {
+                    message = 'Дуже слабкий пароль';
+                    percentage = 25;
+                } else if (strength <= 4) {
+                    message = 'Слабкий пароль';
+                    percentage = 40;
+                } else if (strength <= 6) {
+                    message = 'Середній пароль';
+                    percentage = 60;
+                } else if (strength <= 8) {
+                    message = 'Хороший пароль';
+                    percentage = 80;
+                } else {
+                    message = 'Дуже сильний пароль!';
+                    percentage = 100;
+                }
+                
+                // Add specific messages
+                if (messages.length > 0) {
+                    message += ' (' + messages.join(', ') + ')';
+                }
+                
+                return { score: strength, message, percentage };
+            }
+
+            // Update password requirements
+            function updateRequirements(password) {
+                const hasLength = password.length >= 8;
+                const hasLowercase = /[a-z]/.test(password);
+                const hasUppercase = /[A-Z]/.test(password);
+                const hasNumber = /[0-9]/.test(password);
+                const hasSpecial = /[^A-Za-z0-9]/.test(password);
+                
+                requirements.length.className = hasLength ? 'requirement fulfilled' : 'requirement unfulfilled';
+                requirements.lowercase.className = hasLowercase ? 'requirement fulfilled' : 'requirement unfulfilled';
+                requirements.uppercase.className = hasUppercase ? 'requirement fulfilled' : 'requirement unfulfilled';
+                requirements.number.className = hasNumber ? 'requirement fulfilled' : 'requirement unfulfilled';
+                requirements.special.className = hasSpecial ? 'requirement fulfilled' : 'requirement unfulfilled';
+            }
+
+            // Real-time password strength update
+            passwordInput.addEventListener('input', function() {
+                const password = this.value;
+                const strength = checkPasswordStrength(password);
+                
+                // Update strength meter
+                strengthMeter.style.width = strength.percentage + '%';
+                strengthText.textContent = strength.message;
+                
+                // Update meter color based on strength
+                if (strength.score <= 2) {
+                    strengthMeter.style.background = '#ff4757';
+                    strengthText.className = 'strength-text strength-very-weak';
+                    passwordInput.className = 'error';
+                } else if (strength.score <= 4) {
+                    strengthMeter.style.background = '#ff6b81';
+                    strengthText.className = 'strength-text strength-weak';
+                    passwordInput.className = 'warning';
+                } else if (strength.score <= 6) {
+                    strengthMeter.style.background = '#ffa502';
+                    strengthText.className = 'strength-text strength-medium';
+                    passwordInput.className = '';
+                } else {
+                    strengthMeter.style.background = '#2ed573';
+                    strengthText.className = 'strength-text strength-strong';
+                    passwordInput.className = 'success';
+                }
+                
+                // Update requirements
+                updateRequirements(password);
+                
+                // Validate password match
                 validatePasswordMatch();
             });
 
-            inputs.password.addEventListener('input', function() {
-                validatePassword();
-                validatePasswordMatch();
-            });
-
-            inputs.email.addEventListener('blur', function() {
-                validateEmail();
-            });
+            // Other validation functions
+            inputs.confirmPassword.addEventListener('input', validatePasswordMatch);
+            inputs.email.addEventListener('blur', validateEmail);
 
             function validateEmail() {
                 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -243,16 +454,6 @@
                     return false;
                 } else {
                     hideError(inputs.email, errors.email);
-                    return true;
-                }
-            }
-
-            function validatePassword() {
-                if (inputs.password.value.length < 6) {
-                    showError(inputs.password, errors.password, 'Пароль повинен містити щонайменше 6 символів');
-                    return false;
-                } else {
-                    hideError(inputs.password, errors.password);
                     return true;
                 }
             }
@@ -293,8 +494,16 @@
                     }
 
                     if (!validateEmail()) isValid = false;
-                    if (!validatePassword()) isValid = false;
                     if (!validatePasswordMatch()) isValid = false;
+
+                    // Check password strength
+                    const passwordStrength = checkPasswordStrength(inputs.password.value);
+                    if (passwordStrength.score < 3) {
+                        showError(inputs.password, errors.password, 'Пароль занадто слабкий. ' + passwordStrength.message);
+                        isValid = false;
+                    } else {
+                        hideError(inputs.password, errors.password);
+                    }
 
                     if (!inputs.terms.checked) {
                         errors.terms.style.display = 'block';
@@ -312,7 +521,8 @@
                     console.log('Registration attempt:', {
                         fullName: inputs.fullName.value,
                         email: inputs.email.value,
-                        password: inputs.password.value
+                        password: inputs.password.value,
+                        passwordStrength: passwordStrength.message
                     });
 
                     // Redirect to login page
