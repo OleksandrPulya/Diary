@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Вхід - Auth App</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Auth Form */
+        .auth-form {
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 450px;
+            margin: 0 auto;
+        }
+
+        .form-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .form-header h1 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 2rem;
+        }
+
+        .form-header p {
+            color: #666;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 500;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .form-options {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .checkbox {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #666;
+        }
+
+        .forgot-password {
+            color: #667eea;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .forgot-password:hover {
+            text-decoration: underline;
+        }
+
+        .auth-links {
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        .auth-links p {
+            margin-bottom: 10px;
+            color: #666;
+        }
+
+        .auth-links a {
+            color: #667eea;
+            text-decoration: none;
+        }
+
+        .auth-links a:hover {
+            text-decoration: underline;
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-block;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            text-decoration: none;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-full {
+            width: 100%;
+            margin-bottom: 20px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .auth-form {
+                padding: 30px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="auth-form">
+            <div class="form-header">
+                <h1>Вхід</h1>
+                <p>Увійдіть у свій акаунт</p>
+            </div>
+            
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="email">Електронна пошта:</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="password">Пароль:</label>
+                    <input type="password" id="password" name="password" required>
+                </div>
+                
+                <div class="form-options">
+                    <label class="checkbox">
+                        <input type="checkbox" name="remember">
+                        <span>Запам'ятати мене</span>
+                    </label>
+                    <a href="#" class="forgot-password">Забули пароль?</a>
+                </div>
+                
+                <button type="submit" class="btn btn-primary btn-full">Увійти</button>
+            </form>
+            
+            <div class="auth-links">
+                <p>Не маєте акаунту? <a href="register.html">Зареєструватися</a></p>
+                <p><a href="index.html">← Повернутися на головну</a></p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const loginForm = document.getElementById('loginForm');
+            
+            if (loginForm) {
+                loginForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    
+                    const email = document.getElementById('email').value;
+                    const password = document.getElementById('password').value;
+                    
+                    // Basic validation
+                    if (!email || !password) {
+                        alert('Будь ласка, заповніть всі поля');
+                        return;
+                    }
+                    
+                    // Email validation
+                    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                    if (!emailRegex.test(email)) {
+                        alert('Будь ласка, введіть коректну email адресу');
+                        return;
+                    }
+                    
+                    // Simulate login process
+                    console.log('Login attempt:', { email, password });
+                    
+                    // Redirect to dashboard (simulated)
+                    alert('Успішний вхід! Перенаправлення...');
+                    window.location.href = 'dashboard.html';
+                });
+            }
+        });
+    </script>
+</body>
+</html>
