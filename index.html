@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Освітній портал</title>
+    <title>Освітній портал - Головна</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
@@ -14,110 +14,131 @@
         }
         
         :root {
-            --primary: #3498db;
-            --secondary: #2c3e50;
-            --accent: #e74c3c;
-            --light: #ecf0f1;
-            --success: #2ecc71;
-            --warning: #f39c12;
-            --danger: #e74c3c;
-            --gray: #95a5a6;
+            --primary: #4a6fa5;
+            --primary-light: #6d8ec7;
+            --secondary: #6c757d;
+            --accent: #ff7e5f;
+            --light: #f8f9fa;
+            --light-gray: #e9ecef;
+            --success: #28a745;
+            --warning: #ffc107;
+            --danger: #dc3545;
+            --text: #343a40;
+            --text-light: #6c757d;
+            --shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            --transition: all 0.3s ease;
         }
         
         body {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4eaf1 100%);
             background-attachment: fixed;
-            color: #333;
+            color: var(--text);
             min-height: 100vh;
-            padding: 20px;
-        }
-        
-        /* Стилі для бургер-меню */
-        .burger-menu {
-            position: fixed;
-            top: 0;
-            left: -250px;
-            width: 250px;
-            height: 100%;
-            background: var(--secondary);
-            transition: left 0.3s ease;
-            z-index: 1000;
-            box-shadow: 2px 0 15px rgba(0, 0, 0, 0.3);
-        }
-        
-        .burger-menu:hover {
-            left: 0;
-        }
-        
-        .burger-icon {
-            position: absolute;
-            top: 20px;
-            right: -50px;
-            cursor: pointer;
-            background: var(--secondary);
-            padding: 10px;
-            border-radius: 0 5px 5px 0;
-            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);
-            color: white;
-            font-size: 24px;
-            width: 50px;
-            height: 50px;
             display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
+            padding: 20px;
+            text-align: center;
         }
         
-        .menu-items {
-            list-style: none;
-            padding: 80px 0 0 0;
+        .container {
+            max-width: 800px;
+            width: 100%;
         }
         
-        .menu-items li {
-            padding: 15px 20px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            transition: background 0.3s;
+        .logo {
+            text-align: center;
+            margin-bottom: 40px;
+            animation: fadeIn 1s ease;
         }
         
-        .menu-items li:hover {
-            background: rgba(255, 255, 255, 0.1);
-        }
-        
-        .menu-items li a {
-            color: var(--light);
-            text-decoration: none;
-            display: block;
-            font-size: 18px;
-            transition: 0.3s;
-            display: flex;
-            align-items: center;
-        }
-        
-        .menu-items li a i {
-            margin-right: 10px;
-            font-size: 20px;
-        }
-        
-        .menu-items li a:hover {
+        .logo h1 {
             color: var(--primary);
-            padding-left: 10px;
+            font-size: 42px;
+            margin-bottom: 10px;
         }
         
-        /* Основний контент */
-        .content {
-            margin-left: 0;
-            transition: margin-left 0.3s ease;
-            max-width: 1200px;
-            margin: 0 auto;
+        .logo p {
+            color: var(--text-light);
+            font-size: 18px;
         }
         
-        .page {
-            display: none;
+        .logo i {
+            font-size: 60px;
+            margin-bottom: 20px;
+            color: var(--primary);
+        }
+        
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+        
+        .feature {
             background: white;
             padding: 25px;
-            border-radius: 12px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
-            margin-top: 20px;
-            animation: fadeIn 0.5s ease;
+            border-radius: 16px;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            animation: slideIn 0.5s ease;
+        }
+        
+        .feature:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+        
+        .feature i {
+            font-size: 40px;
+            color: var(--primary);
+            margin-bottom: 15px;
+        }
+        
+        .feature h3 {
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+        
+        .auth-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .btn {
+            padding: 14px 28px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: var(--transition);
+            display: inline-block;
+            text-decoration: none;
+            min-width: 160px;
+        }
+        
+        .btn:hover {
+            background: var(--primary-light);
+            transform: translateY(-3px);
+            box-shadow: 0 7px 15px rgba(74, 111, 165, 0.3);
+        }
+        
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--primary);
+            color: var(--primary);
+        }
+        
+        .btn-outline:hover {
+            background: var(--primary);
+            color: white;
         }
         
         @keyframes fadeIn {
@@ -125,916 +146,69 @@
             to { opacity: 1; transform: translateY(0); }
         }
         
-        .active-page {
-            display: block;
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(-20px); }
+            to { opacity: 1; transform: translateX(0); }
         }
         
-        /* Заголовки */
-        h1, h2, h3 {
-            color: var(--secondary);
-            margin-bottom: 20px;
-            position: relative;
-            padding-bottom: 10px;
-        }
-        
-        h1:after, h2:after, h3:after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 60px;
-            height: 4px;
-            background: var(--primary);
-            border-radius: 2px;
-        }
-        
-        /* Інфографіка успішності */
-        .stats-container {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 20px;
-            margin: 20px 0;
-        }
-        
-        .stat-card {
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            color: white;
-            padding: 25px;
-            border-radius: 12px;
-            flex: 1;
-            min-width: 250px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s;
-        }
-        
-        .stat-card:hover {
-            transform: translateY(-5px);
-        }
-        
-        .stat-card h3 {
-            color: white;
-            margin-bottom: 15px;
-        }
-        
-        .stat-card h3:after {
-            background: white;
-        }
-        
-        .progress-bar {
-            background: rgba(255, 255, 255, 0.3);
-            height: 20px;
-            border-radius: 10px;
-            margin-top: 15px;
-            overflow: hidden;
-        }
-        
-        .progress {
-            height: 100%;
-            background: var(--success);
-            border-radius: 10px;
-            transition: width 1s ease;
-        }
-        
-        /* Форми */
-        .form-group {
-            margin-bottom: 20px;
-        }
-        
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 600;
-            color: var(--secondary);
-        }
-        
-        .form-control {
-            width: 100%;
-            padding: 12px 15px;
-            border: 2px solid #ddd;
-            border-radius: 8px;
-            font-size: 16px;
-            transition: border 0.3s;
-        }
-        
-        .form-control:focus {
-            border-color: var(--primary);
-            outline: none;
-        }
-        
-        .btn {
-            padding: 12px 25px;
-            background: var(--primary);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 16px;
-            font-weight: 600;
-            transition: all 0.3s;
-        }
-        
-        .btn:hover {
-            background: var(--secondary);
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-        }
-        
-        /* Таблиці */
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 20px 0;
-            background: white;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-            border-radius: 8px;
-            overflow: hidden;
-        }
-        
-        th, td {
-            padding: 15px;
-            text-align: left;
-            border-bottom: 1px solid #eee;
-        }
-        
-        th {
-            background-color: var(--primary);
-            color: white;
-            font-weight: 600;
-        }
-        
-        tr:hover {
-            background-color: #f9f9f9;
-        }
-        
-        .status-badge {
-            padding: 5px 10px;
-            border-radius: 20px;
-            font-size: 14px;
-            font-weight: 600;
-        }
-        
-        .status-completed {
-            background: var(--success);
-            color: white;
-        }
-        
-        .status-in-progress {
-            background: var(--warning);
-            color: white;
-        }
-        
-        .status-not-started {
-            background: var(--danger);
-            color: white;
-        }
-        
-        /* Віджети на головній */
-        .widgets {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 20px;
-            margin: 20px 0;
-        }
-        
-        .widget {
-            background: white;
-            padding: 20px;
-            border-radius: 12px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-            transition: transform 0.3s;
-        }
-        
-        .widget:hover {
-            transform: translateY(-5px);
-        }
-        
-        .widget h3 {
-            margin-bottom: 15px;
-            color: var(--secondary);
-        }
-        
-        .widget ul {
-            list-style: none;
-        }
-        
-        .widget li {
-            padding: 10px 0;
-            border-bottom: 1px solid #eee;
-            display: flex;
-            justify-content: space-between;
-        }
-        
-        .widget li:last-child {
-            border-bottom: none;
-        }
-        
-        .user-info {
-            text-align: center;
-            margin-bottom: 30px;
-            background: white;
-            padding: 25px;
-            border-radius: 12px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-        }
-        
-        .user-info h2 {
-            color: var(--secondary);
-            margin-bottom: 10px;
-        }
-        
-        .avatar {
-            width: 120px;
-            height: 120px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 5px solid var(--primary);
-            margin-bottom: 15px;
-        }
-        
-        .deadline-soon {
-            color: var(--danger);
-            font-weight: 600;
-        }
-        
-        .deadline-normal {
-            color: var(--success);
-            font-weight: 600;
-        }
-        
-        .action-buttons {
-            display: flex;
-            gap: 10px;
-            margin-top: 10px;
-        }
-        
-        .btn-sm {
-            padding: 8px 15px;
-            font-size: 14px;
-        }
-        
-        .btn-danger {
-            background: var(--danger);
-        }
-        
-        .btn-success {
-            background: var(--success);
-        }
-        
-        /* Адаптивність */
         @media (max-width: 768px) {
-            .stats-container {
+            .auth-buttons {
                 flex-direction: column;
+                align-items: center;
             }
             
-            .widgets {
-                grid-template-columns: 1fr;
+            .btn {
+                width: 100%;
+                max-width: 300px;
             }
             
-            table {
-                display: block;
-                overflow-x: auto;
+            .logo h1 {
+                font-size: 32px;
             }
         }
     </style>
 </head>
 <body>
-    <!-- Бургер-меню -->
-    <div class="burger-menu">
-        <div class="burger-icon">
-            <i class="fas fa-bars"></i>
+    <div class="container">
+        <div class="logo">
+            <i class="fas fa-graduation-cap"></i>
+            <h1>Освітній портал</h1>
+            <p>Управління навчанням стало простішим</p>
         </div>
-        <ul class="menu-items">
-            <li><a href="#" onclick="showPage('home')"><i class="fas fa-home"></i> Головна</a></li>
-            <li><a href="#" onclick="showPage('homework')"><i class="fas fa-book"></i> Домашнє завдання</a></li>
-            <li><a href="#" onclick="showPage('schedule')"><i class="fas fa-calendar"></i> Розклад уроків</a></li>
-            <li><a href="#" onclick="showPage('grades')"><i class="fas fa-star"></i> Оцінки</a></li>
-            <li><a href="#" onclick="showPage('profile')"><i class="fas fa-user"></i> Профіль</a></li>
-        </ul>
-    </div>
-
-    <!-- Основний контент -->
-    <div class="content">
-        <!-- Головна сторінка -->
-        <div id="home" class="page active-page">
-            <div class="user-info">
-                <img src="https://ui-avatars.com/api/?name=Користувач&size=120&background=3498db&color=fff" alt="Аватар" class="avatar" id="user-avatar">
-                <h2 id="user-name">Вітаємо, Користувач!</h2>
-                <p>Ваша освітня статистика</p>
+        
+        <div class="features">
+            <div class="feature">
+                <i class="fas fa-book"></i>
+                <h3>Домашні завдання</h3>
+                <p>Ведіть облік та відстежуйте свої домашні завдання</p>
             </div>
             
-            <div class="stats-container">
-                <div class="stat-card">
-                    <h3>Успішність</h3>
-                    <p id="success-percentage">0% виконаних завдань вчасно</p>
-                    <div class="progress-bar">
-                        <div class="progress" id="success-progress" style="width: 0%"></div>
-                    </div>
-                </div>
-                
-                <div class="stat-card">
-                    <h3>Середній бал</h3>
-                    <p id="average-grade">0.0 з 12</p>
-                    <div class="progress-bar">
-                        <div class="progress" id="grade-progress" style="width: 0%"></div>
-                    </div>
-                </div>
+            <div class="feature">
+                <i class="fas fa-calendar"></i>
+                <h3>Розклад уроків</h3>
+                <p>Створюйте та переглядайте свій розклад занять</p>
             </div>
             
-            <div class="widgets">
-                <div class="widget">
-                    <h3>Найближчі уроки</h3>
-                    <ul id="upcoming-lessons">
-                        <li>Завантаження...</li>
-                    </ul>
-                </div>
-                
-                <div class="widget">
-                    <h3>Дедлайни</h3>
-                    <ul id="deadlines">
-                        <li>Завантаження...</li>
-                    </ul>
-                </div>
+            <div class="feature">
+                <i class="fas fa-chart-line"></i>
+                <h3>Статистика успішності</h3>
+                <p>Аналізуйте свою успішність та прогрес у навчанні</p>
             </div>
         </div>
         
-        <!-- Сторінка домашніх завдань -->
-        <div id="homework" class="page">
-            <h1>Домашнє завдання</h1>
-            
-            <div class="form-group">
-                <label for="homework-subject">Предмет</label>
-                <input type="text" id="homework-subject" class="form-control" placeholder="Назва предмету">
-            </div>
-            
-            <div class="form-group">
-                <label for="homework-task">Завдання</label>
-                <textarea id="homework-task" class="form-control" placeholder="Опис завдання" rows="3"></textarea>
-            </div>
-            
-            <div class="form-group">
-                <label for="homework-deadline">Термін здачі</label>
-                <input type="date" id="homework-deadline" class="form-control">
-            </div>
-            
-            <button class="btn" onclick="addHomework()">Додати завдання</button>
-            
-            <table>
-                <thead>
-                    <tr>
-                        <th>Предмет</th>
-                        <th>Завдання</th>
-                        <th>Термін здачі</th>
-                        <th>Статус</th>
-                        <th>Дії</th>
-                    </tr>
-                </thead>
-                <tbody id="homework-table">
-                    <!-- Тут будуть додаватись завдання -->
-                </tbody>
-            </table>
-        </div>
-        
-        <!-- Сторінка розкладу уроків -->
-        <div id="schedule" class="page">
-            <h1>Розклад уроків</h1>
-            
-            <div class="form-group">
-                <label for="schedule-subject">Предмет</label>
-                <input type="text" id="schedule-subject" class="form-control" placeholder="Назва предмету">
-            </div>
-            
-            <div class="form-group">
-                <label for="schedule-day">День тижня</label>
-                <select id="schedule-day" class="form-control">
-                    <option value="Понеділок">Понеділок</option>
-                    <option value="Вівторок">Вівторок</option>
-                    <option value="Середа">Середа</option>
-                    <option value="Четвер">Четвер</option>
-                    <option value="П'ятниця">П'ятниця</option>
-                </select>
-            </div>
-            
-            <div class="form-group">
-                <label for="schedule-time">Час</label>
-                <input type="time" id="schedule-time" class="form-control">
-            </div>
-            
-            <button class="btn" onclick="addLesson()">Додати урок</button>
-            
-            <table>
-                <thead>
-                    <tr>
-                        <th>Предмет</th>
-                        <th>День</th>
-                        <th>Час</th>
-                        <th>Дії</th>
-                    </tr>
-                </thead>
-                <tbody id="schedule-table">
-                    <!-- Тут будуть додаватись уроки -->
-                </tbody>
-            </table>
-        </div>
-        
-        <!-- Сторінка оцінок -->
-        <div id="grades" class="page">
-            <h1>Оцінки</h1>
-            
-            <div class="form-group">
-                <label for="grade-subject">Предмет</label>
-                <input type="text" id="grade-subject" class="form-control" placeholder="Назва предмету">
-            </div>
-            
-            <div class="form-group">
-                <label for="grade-value">Оцінка (від 1 до 12)</label>
-                <input type="number" id="grade-value" class="form-control" min="1" max="12">
-            </div>
-            
-            <button class="btn" onclick="addGrade()">Додати оцінку</button>
-            
-            <table>
-                <thead>
-                    <tr>
-                        <th>Предмет</th>
-                        <th>Оцінка</th>
-                        <th>Дії</th>
-                    </tr>
-                </thead>
-                <tbody id="grades-table">
-                    <!-- Тут будуть додаватись оцінки -->
-                </tbody>
-            </table>
-        </div>
-        
-        <!-- Сторінка профілю -->
-        <div id="profile" class="page">
-            <h1>Профіль</h1>
-            
-            <div class="form-group">
-                <label for="profile-name">Ім'я</label>
-                <input type="text" id="profile-name" class="form-control" placeholder="Ваше ім'я">
-            </div>
-            
-            <div class="form-group">
-                <label for="profile-password">Новий пароль</label>
-                <input type="password" id="profile-password" class="form-control" placeholder="Введіть новий пароль">
-            </div>
-            
-            <div class="form-group">
-                <label for="profile-avatar">Аватар (URL зображення)</label>
-                <input type="text" id="profile-avatar" class="form-control" placeholder="Посилання на аватар">
-            </div>
-            
-            <button class="btn" onclick="saveProfile()">Зберегти зміни</button>
+        <div class="auth-buttons">
+            <a href="login.html" class="btn">Увійти</a>
+            <a href="register.html" class="btn btn-outline">Зареєструватися</a>
         </div>
     </div>
 
     <script>
-        // Дані програми
-        let userData = {
-            name: "Користувач",
-            avatar: "https://ui-avatars.com/api/?name=Користувач&size=120&background=3498db&color=fff",
-            homework: [],
-            schedule: [],
-            grades: []
-        };
-        
-        // Завантаження даних з локального сховища
-        function loadData() {
-            const savedData = localStorage.getItem('userData');
-            if (savedData) {
-                userData = JSON.parse(savedData);
-            }
-            
-            // Оновлення інтерфейсу
-            updateUI();
-        }
-        
-        // Збереження даних у локальне сховище
-        function saveData() {
-            localStorage.setItem('userData', JSON.stringify(userData));
-            updateUI();
-        }
-        
-        // Оновлення інтерфейсу
-        function updateUI() {
-            // Оновлення імені та аватара
-            document.getElementById('user-name').textContent = `Вітаємо, ${userData.name}!`;
-            document.getElementById('user-avatar').src = userData.avatar;
-            document.getElementById('profile-name').value = userData.name;
-            document.getElementById('profile-avatar').value = userData.avatar;
-            
-            // Оновлення таблиць
-            updateHomeworkTable();
-            updateScheduleTable();
-            updateGradesTable();
-            
-            // Розрахунок та оновлення статистики
-            calculateSuccessRate();
-            calculateAverageGrade();
-            updateUpcomingLessons();
-            updateDeadlines();
-        }
-        
-        // Функція для перемикання сторінок
-        function showPage(pageId) {
-            // Приховуємо всі сторінки
-            const pages = document.querySelectorAll('.page');
-            pages.forEach(page => {
-                page.classList.remove('active-page');
-            });
-            
-            // Показуємо вибрану сторінку
-            document.getElementById(pageId).classList.add('active-page');
-        }
-        
-        // Додавання домашнього завдання
-        function addHomework() {
-            const subject = document.getElementById('homework-subject').value;
-            const task = document.getElementById('homework-task').value;
-            const deadline = document.getElementById('homework-deadline').value;
-            
-            if (!subject || !task || !deadline) {
-                alert('Будь ласка, заповніть всі поля');
-                return;
-            }
-            
-            userData.homework.push({
-                id: Date.now(),
-                subject,
-                task,
-                deadline,
-                completed: false
-            });
-            
-            // Очищаємо поля форми
-            document.getElementById('homework-subject').value = '';
-            document.getElementById('homework-task').value = '';
-            document.getElementById('homework-deadline').value = '';
-            
-            saveData();
-        }
-        
-        // Оновлення таблиці домашніх завдань
-        function updateHomeworkTable() {
-            const table = document.getElementById('homework-table');
-            table.innerHTML = '';
-            
-            userData.homework.forEach(hw => {
-                const row = document.createElement('tr');
-                
-                // Визначаємо статус завдання
-                const today = new Date();
-                const deadlineDate = new Date(hw.deadline);
-                let status = '';
-                
-                if (hw.completed) {
-                    status = '<span class="status-badge status-completed">Виконано</span>';
-                } else if (deadlineDate < today) {
-                    status = '<span class="status-badge status-not-started">Прострочено</span>';
-                } else {
-                    status = '<span class="status-badge status-in-progress">В процесі</span>';
-                }
-                
-                row.innerHTML = `
-                    <td>${hw.subject}</td>
-                    <td>${hw.task}</td>
-                    <td>${formatDate(hw.deadline)}</td>
-                    <td>${status}</td>
-                    <td class="action-buttons">
-                        <button class="btn btn-sm btn-success" onclick="toggleHomework(${hw.id})">${hw.completed ? 'Скасувати' : 'Виконано'}</button>
-                        <button class="btn btn-sm btn-danger" onclick="deleteHomework(${hw.id})">Видалити</button>
-                    </td>
-                `;
-                
-                table.appendChild(row);
-            });
-        }
-        
-        // Позначення домашнього завдання як виконаного/невиконаного
-        function toggleHomework(id) {
-            const homework = userData.homework.find(hw => hw.id === id);
-            if (homework) {
-                homework.completed = !homework.completed;
-                saveData();
-            }
-        }
-        
-        // Видалення домашнього завдання
-        function deleteHomework(id) {
-            userData.homework = userData.homework.filter(hw => hw.id !== id);
-            saveData();
-        }
-        
-        // Додавання уроку до розкладу
-        function addLesson() {
-            const subject = document.getElementById('schedule-subject').value;
-            const day = document.getElementById('schedule-day').value;
-            const time = document.getElementById('schedule-time').value;
-            
-            if (!subject || !time) {
-                alert('Будь ласка, заповніть всі поля');
-                return;
-            }
-            
-            userData.schedule.push({
-                id: Date.now(),
-                subject,
-                day,
-                time
-            });
-            
-            // Очищаємо поля форми
-            document.getElementById('schedule-subject').value = '';
-            document.getElementById('schedule-time').value = '';
-            
-            saveData();
-        }
-        
-        // Оновлення таблиці розкладу
-        function updateScheduleTable() {
-            const table = document.getElementById('schedule-table');
-            table.innerHTML = '';
-            
-            // Сортуємо розклад за днями та часом
-            const daysOrder = ['Понеділок', 'Вівторок', 'Середа', 'Четвер', 'П\'ятниця'];
-            userData.schedule.sort((a, b) => {
-                if (a.day !== b.day) {
-                    return daysOrder.indexOf(a.day) - daysOrder.indexOf(b.day);
-                }
-                return a.time.localeCompare(b.time);
-            });
-            
-            userData.schedule.forEach(lesson => {
-                const row = document.createElement('tr');
-                
-                row.innerHTML = `
-                    <td>${lesson.subject}</td>
-                    <td>${lesson.day}</td>
-                    <td>${lesson.time}</td>
-                    <td class="action-buttons">
-                        <button class="btn btn-sm btn-danger" onclick="deleteLesson(${lesson.id})">Видалити</button>
-                    </td>
-                `;
-                
-                table.appendChild(row);
-            });
-        }
-        
-        // Видалення уроку з розкладу
-        function deleteLesson(id) {
-            userData.schedule = userData.schedule.filter(lesson => lesson.id !== id);
-            saveData();
-        }
-        
-        // Додавання оцінки
-        function addGrade() {
-            const subject = document.getElementById('grade-subject').value;
-            const value = parseInt(document.getElementById('grade-value').value);
-            
-            if (!subject || isNaN(value) || value < 1 || value > 12) {
-                alert('Будь ласка, введіть коректні дані (оцінка від 1 до 12)');
-                return;
-            }
-            
-            userData.grades.push({
-                id: Date.now(),
-                subject,
-                value
-            });
-            
-            // Очищаємо поля форми
-            document.getElementById('grade-subject').value = '';
-            document.getElementById('grade-value').value = '';
-            
-            saveData();
-        }
-        
-        // Оновлення таблиці оцінок
-        function updateGradesTable() {
-            const table = document.getElementById('grades-table');
-            table.innerHTML = '';
-            
-            userData.grades.forEach(grade => {
-                const row = document.createElement('tr');
-                
-                row.innerHTML = `
-                    <td>${grade.subject}</td>
-                    <td>${grade.value}</td>
-                    <td class="action-buttons">
-                        <button class="btn btn-sm btn-danger" onclick="deleteGrade(${grade.id})">Видалити</button>
-                    </td>
-                `;
-                
-                table.appendChild(row);
-            });
-        }
-        
-        // Видалення оцінки
-        function deleteGrade(id) {
-            userData.grades = userData.grades.filter(grade => grade.id !== id);
-            saveData();
-        }
-        
-        // Збереження профілю
-        function saveProfile() {
-            const name = document.getElementById('profile-name').value;
-            const password = document.getElementById('profile-password').value;
-            const avatar = document.getElementById('profile-avatar').value;
-            
-            if (name) {
-                userData.name = name;
-            }
-            
-            if (avatar) {
-                userData.avatar = avatar;
-            }
-            
-            if (password) {
-                // Тут має бути логіка збереження пароля
-                alert('Пароль оновлено');
-            }
-            
-            saveData();
-            alert('Профіль оновлено');
-        }
-        
-        // Розрахунок успішності
-        function calculateSuccessRate() {
-            if (userData.homework.length === 0) {
-                document.getElementById('success-percentage').textContent = '0% виконаних завдань вчасно';
-                document.getElementById('success-progress').style.width = '0%';
-                return;
-            }
-            
-            const completedOnTime = userData.homework.filter(hw => {
-                if (!hw.completed) return false;
-                
-                const completedDate = new Date();
-                const deadlineDate = new Date(hw.deadline);
-                return completedDate <= deadlineDate;
-            }).length;
-            
-            const successRate = Math.round((completedOnTime / userData.homework.length) * 100);
-            
-            document.getElementById('success-percentage').textContent = `${successRate}% виконаних завдань вчасно`;
-            document.getElementById('success-progress').style.width = `${successRate}%`;
-        }
-        
-        // Розрахунок середнього балу
-        function calculateAverageGrade() {
-            if (userData.grades.length === 0) {
-                document.getElementById('average-grade').textContent = '0.0 з 12';
-                document.getElementById('grade-progress').style.width = '0%';
-                return;
-            }
-            
-            const sum = userData.grades.reduce((total, grade) => total + grade.value, 0);
-            const average = (sum / userData.grades.length).toFixed(1);
-            const percentage = (average / 12) * 100;
-            
-            document.getElementById('average-grade').textContent = `${average} з 12`;
-            document.getElementById('grade-progress').style.width = `${percentage}%`;
-        }
-        
-        // Оновлення списку найближчих уроків
-        function updateUpcomingLessons() {
-            const list = document.getElementById('upcoming-lessons');
-            list.innerHTML = '';
-            
-            if (userData.schedule.length === 0) {
-                list.innerHTML = '<li>Немає запланованих уроків</li>';
-                return;
-            }
-            
-            // Отримуємо поточний день та час
-            const now = new Date();
-            const today = now.getDay(); // 0 - неділя, 1 - понеділок, ...
-            const currentTime = now.getHours() * 60 + now.getMinutes(); // час у хвилинах
-            
-            // Конвертуємо день тижня JavaScript у наш формат
-            const daysMap = ['Неділя', 'Понеділок', 'Вівторок', 'Середа', 'Четвер', 'П\'ятниця', 'Субота'];
-            const todayName = daysMap[today];
-            
-            // Фільтруємо уроки на сьогодні та майбутні дні
-            const upcomingLessons = userData.schedule.filter(lesson => {
-                const lessonDayIndex = daysMap.indexOf(lesson.day);
-                const lessonTime = lesson.time.split(':');
-                const lessonMinutes = parseInt(lessonTime[0]) * 60 + parseInt(lessonTime[1]);
-                
-                // Якщо урок сьогодні, перевіряємо чи ще не пройшов
-                if (lesson.day === todayName) {
-                    return lessonMinutes > currentTime;
-                }
-                
-                // Якщо урок в майбутній день
-                return lessonDayIndex > today || (lessonDayIndex === 0 && today !== 0); // неділя - особливий випадок
-            });
-            
-            // Сортуємо уроки
-            upcomingLessons.sort((a, b) => {
-                const aDayIndex = daysMap.indexOf(a.day);
-                const bDayIndex = daysMap.indexOf(b.day);
-                
-                if (aDayIndex !== bDayIndex) {
-                    return aDayIndex - bDayIndex;
-                }
-                
-                const aTime = a.time.split(':');
-                const bTime = b.time.split(':');
-                const aMinutes = parseInt(aTime[0]) * 60 + parseInt(aTime[1]);
-                const bMinutes = parseInt(bTime[0]) * 60 + parseInt(bTime[1]);
-                
-                return aMinutes - bMinutes;
-            });
-            
-            // Додаємо не більше 5 найближчих уроків
-            const displayLessons = upcomingLessons.slice(0, 5);
-            
-            if (displayLessons.length === 0) {
-                list.innerHTML = '<li>Немає запланованих уроків</li>';
-                return;
-            }
-            
-            displayLessons.forEach(lesson => {
-                const li = document.createElement('li');
-                li.innerHTML = `${lesson.subject} - ${lesson.day} ${lesson.time}`;
-                list.appendChild(li);
-            });
-        }
-        
-        // Оновлення дедлайнів
-        function updateDeadlines() {
-            const list = document.getElementById('deadlines');
-            list.innerHTML = '';
-            
-            if (userData.homework.length === 0) {
-                list.innerHTML = '<li>Немає активних завдань</li>';
-                return;
-            }
-            
-            // Фільтруємо невиконані завдання
-            const pendingHomework = userData.homework.filter(hw => !hw.completed);
-            
-            if (pendingHomework.length === 0) {
-                list.innerHTML = '<li>Всі завдання виконані!</li>';
-                return;
-            }
-            
-            // Сортуємо за дедлайном
-            pendingHomework.sort((a, b) => new Date(a.deadline) - new Date(b.deadline));
-            
-            // Додаємо не більше 5 найближчих дедлайнів
-            const displayHomework = pendingHomework.slice(0, 5);
-            
-            displayHomework.forEach(hw => {
-                const li = document.createElement('li');
-                const deadlineDate = new Date(hw.deadline);
-                const today = new Date();
-                const diffTime = deadlineDate - today;
-                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-                
-                let deadlineText = '';
-                if (diffDays < 0) {
-                    deadlineText = `<span class="deadline-soon">Прострочено на ${Math.abs(diffDays)} д.</span>`;
-                } else if (diffDays === 0) {
-                    deadlineText = '<span class="deadline-soon">Сьогодні!</span>';
-                } else if (diffDays === 1) {
-                    deadlineText = '<span class="deadline-soon">Завтра</span>';
-                } else if (diffDays <= 3) {
-                    deadlineText = `<span class="deadline-soon">Через ${diffDays} д.</span>`;
-                } else {
-                    deadlineText = `<span class="deadline-normal">Через ${diffDays} д.</span>`;
-                }
-                
-                li.innerHTML = `${hw.subject} - ${hw.task} - ${deadlineText}`;
-                list.appendChild(li);
-            });
-        }
-        
-        // Форматування дати
-        function formatDate(dateString) {
-            const date = new Date(dateString);
-            return date.toLocaleDateString('uk-UA');
-        }
-        
-        // Ініціалізація програми
+        // Перевіряємо чи користувач вже авторизований
         window.onload = function() {
-            loadData();
-            
-            // Встановлюємо поточну дату як мінімальну для дедлайнів
-            const today = new Date().toISOString().split('T')[0];
-            document.getElementById('homework-deadline').min = today;
-            
-            // Відкриваємо бургер-меню при наведенні на іконку
-            document.querySelector('.burger-icon').addEventListener('mouseenter', function() {
-                document.querySelector('.burger-menu').style.left = '0';
-            });
-            
-            // Закриваємо бургер-меню при відведенні курсора
-            document.querySelector('.burger-menu').addEventListener('mouseleave', function() {
-                document.querySelector('.burger-menu').style.left = '-250px';
-            });
+            const isLoggedIn = localStorage.getItem('isLoggedIn');
+            if (isLoggedIn === 'true') {
+                window.location.href = 'dashboard.html';
+            }
         };
     </script>
 </body>
