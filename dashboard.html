@@ -103,6 +103,18 @@
             padding: 20px;
             border-top: 1px solid rgba(255, 255, 255, 0.1);
         }
+
+        .avatar-preview {
+            margin-top: 10px;
+            text-align: center;
+        }
+
+        .avatar-preview img {
+            max-width: 100px;
+            max-height: 100px;
+            border-radius: 50%;
+            border: 2px solid var(--primary-light);
+        }
         
         /* Main Content */
         .main-content {
@@ -983,8 +995,11 @@
                     </div>
                     
                     <div class="form-group">
-                        <label for="profile-avatar">URL аватарки</label>
-                        <input type="text" id="profile-avatar" class="form-control" placeholder="https://...">
+                        <label for="profile-avatar">Аватарка</label>
+                        <input type="file" id="profile-avatar" class="form-control" accept="image/*">
+                        <div id="avatar-preview" style="margin-top: 10px; display: none;">
+                            <img id="avatar-preview-img" style="max-width: 100px; max-height: 100px; border-radius: 50%;">
+                        </div>
                     </div>
                     
                     <div class="form-group password-container">
@@ -1902,6 +1917,80 @@
                 
             localStorage.setItem('currentWeek', currentWeek.toString());
             document.getElementById('currentWeek').textContent = `Тиждень ${currentWeek}`;
+            }
+
+                    // Додати обробник події для поля завантаження файлу
+            document.getElementById('profile-avatar').addEventListener('change', function(e) {
+                handleAvatarUpload(e.target.files[0]);
+            });
+            
+            // Функція для обробки завантаження аватарки
+            function handleAvatarUpload(file) {
+                if (!file || !file.type.match('image.*')) {
+                    alert('Будь ласка, виберіть зображення');
+                    return;
+                }
+                
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const avatarDataUrl = e.target.result;
+                    
+                    // Показати прев'ю
+                    document.getElementById('avatar-preview').style.display = 'block';
+                    document.getElementById('avatar-preview-img').src = avatarDataUrl;
+                    
+                    // Зберегти тимчасово для подальшого використання
+                    localStorage.setItem('tempAvatar', avatarDataUrl);
+                };
+                reader.readAsDataURL(file);
+            }
+            
+            // Оновити функцію saveProfile()
+            function saveProfile() {
+                const name = document.getElementById('profile-name').value;
+                const email = document.getElementById('profile-email').value;
+                const password = document.getElementById('profile-password').value;
+                const passwordConfirm = document.getElementById('profile-password-confirm').value;
+                
+                // Отримати завантажену аватарку
+                const avatarDataUrl = localStorage.getItem('tempAvatar');
+                
+                // ... решта коду функції saveProfile() ...
+                
+                // Оновити аватарку, якщо була завантажена нова
+                if (avatarDataUrl) {
+                    currentUser.avatar = avatarDataUrl;
+                    // Видалити тимчасові дані
+                    localStorage.removeItem('tempAvatar');
+                }
+                
+                // ... решта коду функції saveProfile() ...
+            }
+            
+            // Оновити функцію resetProfileForm()
+            function resetProfileForm() {
+                const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+                document.getElementById('profile-name').value = currentUser.name;
+                document.getElementById('profile-email').value = currentUser.email;
+                document.getElementById('profile-password').value = '';
+                document.getElementById('profile-password-confirm').value = '';
+                
+                // Скинути поле завантаження файлу
+                document.getElementById('profile-avatar').value = '';
+                document.getElementById('avatar-preview').style.display = 'none';
+                localStorage.removeItem('tempAvatar');
+            }
+            
+            // Додати перевірку при завантаженні сторінки
+            window.onload = function() {
+                // ... існуючий код ...
+                
+                // Перевірити, чи є тимчасова аватарка
+                const tempAvatar = localStorage.getItem('tempAvatar');
+                if (tempAvatar) {
+                    document.getElementById('avatar-preview').style.display = 'block';
+                    document.getElementById('avatar-preview-img').src = tempAvatar;
+                }
             }
         </script>
     </body>
