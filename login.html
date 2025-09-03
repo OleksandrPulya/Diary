@@ -3,332 +3,217 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Вхід - Auth App</title>
+    <title>Освітній портал - Вхід</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-        }
-
-        body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        :root {
+            --primary: #4a6fa5;
+            --primary-light: #6d8ec7;
+            --secondary: #6c757d;
+            --accent: #ff7e5f;
+            --light: #f8f9fa;
+            --light-gray: #e9ecef;
+            --success: #28a745;
+            --warning: #ffc107;
+            --danger: #dc3545;
+            --text: #343a40;
+            --text-light: #6c757d;
+            --shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            --transition: all 0.3s ease;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4eaf1 100%);
+            background-attachment: fixed;
+            color: var(--text);
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
             padding: 20px;
         }
-
-        .container {
+        
+        .auth-container {
             width: 100%;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        /* Auth Form */
-        .auth-form {
+            max-width: 500px;
             background: white;
-            padding: 40px;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-            width: 100%;
-            max-width: 450px;
-            margin: 0 auto;
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: var(--shadow);
+            animation: fadeIn 0.8s ease;
         }
-
-        .form-header {
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .logo {
             text-align: center;
             margin-bottom: 30px;
         }
-
-        .form-header h1 {
-            color: #333;
+        
+        .logo h1 {
+            color: var(--primary);
+            font-size: 28px;
             margin-bottom: 10px;
-            font-size: 2rem;
         }
-
-        .form-header p {
-            color: #666;
+        
+        .logo a {
+            color: var(--primary);
+            text-decoration: none;
+            display: inline-block;
+            margin-top: 10px;
         }
-
+        
+        .logo a:hover {
+            text-decoration: underline;
+        }
+        
         .form-group {
             margin-bottom: 20px;
-            position: relative;
         }
-
+        
         .form-group label {
             display: block;
             margin-bottom: 8px;
-            color: #333;
-            font-weight: 500;
+            font-weight: 600;
+            color: var(--text);
         }
-
-        .password-input-container {
-            position: relative;
-        }
-
-        .password-input {
+        
+        .form-control {
             width: 100%;
-            padding: 12px 45px 12px 15px;
-            border: 2px solid #ddd;
-            border-radius: 8px;
+            padding: 14px 16px;
+            border: 2px solid var(--light-gray);
+            border-radius: 10px;
             font-size: 16px;
-            transition: border-color 0.3s ease;
+            transition: var(--transition);
         }
-
-        .password-input:focus {
+        
+        .form-control:focus {
+            border-color: var(--primary);
             outline: none;
-            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(74, 111, 165, 0.2);
         }
-
-        .password-toggle {
-            position: absolute;
-            right: 15px;
-            top: 50%;
-            transform: translateY(-50%);
-            background: none;
-            border: none;
-            cursor: pointer;
-            color: #666;
-            font-size: 18px;
-            padding: 0;
-            width: 24px;
-            height: 24px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .password-toggle:hover {
-            color: #667eea;
-        }
-
-        .password-input.error {
-            border-color: #ff4757;
-        }
-
-        .error-message {
-            color: #ff4757;
-            font-size: 14px;
-            margin-top: 5px;
-            display: none;
-        }
-
-        .form-options {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 25px;
-        }
-
-        .checkbox {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            color: #666;
-        }
-
-        .forgot-password {
-            color: #667eea;
-            text-decoration: none;
-            font-size: 14px;
-        }
-
-        .forgot-password:hover {
-            text-decoration: underline;
-        }
-
-        .auth-links {
-            text-align: center;
-            margin-top: 30px;
-        }
-
-        .auth-links p {
-            margin-bottom: 10px;
-            color: #666;
-        }
-
-        .auth-links a {
-            color: #667eea;
-            text-decoration: none;
-        }
-
-        .auth-links a:hover {
-            text-decoration: underline;
-        }
-
-        /* Buttons */
+        
         .btn {
-            display: inline-block;
-            padding: 12px 30px;
+            width: 100%;
+            padding: 14px 28px;
+            background: var(--primary);
+            color: white;
             border: none;
-            border-radius: 8px;
+            border-radius: 10px;
+            cursor: pointer;
             font-size: 16px;
             font-weight: 600;
-            text-decoration: none;
+            transition: var(--transition);
+            display: inline-block;
+        }
+        
+        .btn:hover {
+            background: var(--primary-light);
+            transform: translateY(-3px);
+            box-shadow: 0 7px 15px rgba(74, 111, 165, 0.3);
+        }
+        
+        .form-footer {
             text-align: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
+            margin-top: 20px;
+            color: var(--text-light);
         }
-
-        .btn-primary {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
+        
+        .form-footer a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
         }
-
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        
+        .form-footer a:hover {
+            text-decoration: underline;
         }
-
-        .btn-full {
-            width: 100%;
-            margin-bottom: 20px;
-        }
-
-        /* Responsive */
-        @media (max-width: 768px) {
-            .auth-form {
-                padding: 30px;
+        
+        @media (max-width: 480px) {
+            .auth-container {
+                padding: 20px;
             }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="auth-form">
-            <div class="form-header">
-                <h1>Вхід</h1>
-                <p>Увійдіть у свій акаунт</p>
-            </div>
-            
-            <form id="loginForm">
-                <div class="form-group">
-                    <label for="email">Електронна пошта:</label>
-                    <input type="email" id="email" name="email" class="password-input" required>
-                    <div class="error-message" id="emailError">Будь ласка, введіть коректну email адресу</div>
-                </div>
-                
-                <div class="form-group">
-                    <label for="password">Пароль:</label>
-                    <div class="password-input-container">
-                        <input type="password" id="password" name="password" class="password-input" required>
-                        <button type="button" class="password-toggle" id="passwordToggle">
-                            👁️
-                        </button>
-                    </div>
-                    <div class="error-message" id="passwordError">Невірний email або пароль</div>
-                </div>
-                
-                <div class="form-options">
-                    <label class="checkbox">
-                        <input type="checkbox" name="remember">
-                        <span>Запам'ятати мене</span>
-                    </label>
-                    <a href="#" class="forgot-password">Забули пароль?</a>
-                </div>
-                
-                <button type="submit" class="btn btn-primary btn-full">Увійти</button>
-            </form>
-            
-            <div class="auth-links">
-                <p>Не маєте акаунту? <a href="register.html">Зареєструватися</a></p>
-                <p><a href="index.html">← Повернутися на головну</a></p>
-            </div>
+    <div class="auth-container">
+        <div class="logo">
+            <h1><i class="fas fa-graduation-cap"></i> Вхід</h1>
+            <a href="index.html">← Повернутися на головну</a>
         </div>
+        
+        <form id="login-form">
+            <div class="form-group">
+                <label for="login-email">Електронна пошта</label>
+                <input type="email" id="login-email" class="form-control" placeholder="Ваша пошта" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="login-password">Пароль</label>
+                <input type="password" id="login-password" class="form-control" placeholder="Ваш пароль" required>
+            </div>
+            
+            <button type="submit" class="btn">Увійти</button>
+            
+            <div class="form-footer">
+                <p>Немає акаунта? <a href="register.html">Зареєструватися</a></p>
+            </div>
+        </form>
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const loginForm = document.getElementById('loginForm');
-            const passwordInput = document.getElementById('password');
-            const passwordToggle = document.getElementById('passwordToggle');
+        // Перевіряємо чи користувач вже авторизований
+        window.onload = function() {
+            const isLoggedIn = localStorage.getItem('isLoggedIn');
+            if (isLoggedIn === 'true') {
+                window.location.href = 'dashboard.html';
+            }
             
-            // Toggle password visibility
-            function setupPasswordToggle(toggleButton, inputField) {
-                toggleButton.addEventListener('click', function() {
-                    const isPassword = inputField.type === 'password';
-                    inputField.type = isPassword ? 'text' : 'password';
-                    toggleButton.textContent = isPassword ? '🔒' : '👁️';
-                });
+            // Додаємо обробник форми
+            document.getElementById('login-form').addEventListener('submit', function(e) {
+                e.preventDefault();
+                login();
+            });
+        };
+        
+        // Вхід
+        function login() {
+            const email = document.getElementById('login-email').value;
+            const password = document.getElementById('login-password').value;
+            
+            if (!email || !password) {
+                alert('Будь ласка, заповніть всі поля');
+                return;
             }
-
-            // Initialize password toggle
-            setupPasswordToggle(passwordToggle, passwordInput);
-
-            // Check if user exists and credentials are correct
-            function validateLogin(email, password) {
-                const users = JSON.parse(localStorage.getItem('registeredUsers') || '[]');
-                
-                // Find user by email
-                const user = users.find(user => user.email === email);
-                
-                if (!user) {
-                    return { success: false, message: 'Користувача з таким email не знайдено' };
-                }
-                
-                // Check password (in real app, this should be hashed password comparison)
-                if (user.password !== password) {
-                    return { success: false, message: 'Невірний пароль' };
-                }
-                
-                return { success: true, user: user };
+            
+            // Перевіряємо чи існує користувач
+            const savedData = localStorage.getItem('userData');
+            if (!savedData) {
+                alert('Користувача з такою поштою не знайдено');
+                return;
             }
-
-            function showError(input, errorElement, message) {
-                input.classList.add('error');
-                errorElement.textContent = message;
-                errorElement.style.display = 'block';
+            
+            const userData = JSON.parse(savedData);
+            
+            if (userData.email !== email || userData.password !== password) {
+                alert('Невірна пошта або пароль');
+                return;
             }
-
-            function hideError(input, errorElement) {
-                input.classList.remove('error');
-                errorElement.style.display = 'none';
-            }
-
-            if (loginForm) {
-                loginForm.addEventListener('submit', function(e) {
-                    e.preventDefault();
-                    
-                    const email = document.getElementById('email').value;
-                    const password = document.getElementById('password').value;
-                    
-                    // Basic validation
-                    if (!email || !password) {
-                        alert('Будь ласка, заповніть всі поля');
-                        return;
-                    }
-                    
-                    // Email validation
-                    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-                    if (!emailRegex.test(email)) {
-                        showError(document.getElementById('email'), document.getElementById('emailError'), 'Будь ласка, введіть коректну email адресу');
-                        return;
-                    } else {
-                        hideError(document.getElementById('email'), document.getElementById('emailError'));
-                    }
-                    
-                    // Check if user exists and credentials are correct
-                    const validationResult = validateLogin(email, password);
-                    
-                    if (!validationResult.success) {
-                        showError(document.getElementById('password'), document.getElementById('passwordError'), validationResult.message);
-                        return;
-                    } else {
-                        hideError(document.getElementById('password'), document.getElementById('passwordError'));
-                    }
-                    
-                    // Save current user session
-                    localStorage.setItem('currentUser', JSON.stringify(validationResult.user));
-                    
-                    // Redirect to dashboard
-                    alert('Успішний вхід! Перенаправлення...');
-                    window.location.href = 'dashboard.html';
-                });
-            }
-        });
+            
+            localStorage.setItem('isLoggedIn', 'true');
+            window.location.href = 'dashboard.html';
+        }
     </script>
 </body>
 </html>
