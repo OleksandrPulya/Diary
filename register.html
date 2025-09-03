@@ -79,6 +79,7 @@
         
         .form-group {
             margin-bottom: 20px;
+            position: relative;
         }
         
         .form-group label {
@@ -103,6 +104,34 @@
             box-shadow: 0 0 0 3px rgba(74, 111, 165, 0.2);
         }
         
+        .password-toggle {
+            position: absolute;
+            right: 15px;
+            top: 42px;
+            cursor: pointer;
+            color: var(--text-light);
+        }
+        
+        .password-strength {
+            height: 5px;
+            margin-top: 8px;
+            border-radius: 5px;
+            background: #eee;
+            overflow: hidden;
+        }
+        
+        .password-strength-bar {
+            height: 100%;
+            width: 0;
+            transition: width 0.3s ease;
+        }
+        
+        .password-strength-text {
+            font-size: 12px;
+            margin-top: 5px;
+            color: var(--text-light);
+        }
+        
         .btn {
             width: 100%;
             padding: 14px 28px;
@@ -121,6 +150,13 @@
             background: var(--primary-light);
             transform: translateY(-3px);
             box-shadow: 0 7px 15px rgba(74, 111, 165, 0.3);
+        }
+        
+        .btn:disabled {
+            background: var(--light-gray);
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
         }
         
         .form-footer {
@@ -162,19 +198,27 @@
             <div class="form-group">
                 <label for="register-email">Електронна пошта</label>
                 <input type="email" id="register-email" class="form-control" placeholder="Ваша пошта" required>
+                <div id="email-error" style="color: var(--danger); font-size: 14px; margin-top: 5px; display: none;">Ця пошта вже використовується</div>
             </div>
             
             <div class="form-group">
                 <label for="register-password">Пароль</label>
                 <input type="password" id="register-password" class="form-control" placeholder="Ваш пароль" required>
+                <i class="fas fa-eye password-toggle" id="register-password-toggle"></i>
+                <div class="password-strength">
+                    <div class="password-strength-bar" id="password-strength-bar"></div>
+                </div>
+                <div class="password-strength-text" id="password-strength-text">Надійність пароля</div>
             </div>
             
             <div class="form-group">
                 <label for="register-password-confirm">Підтвердження пароля</label>
                 <input type="password" id="register-password-confirm" class="form-control" placeholder="Підтвердіть пароль" required>
+                <i class="fas fa-eye password-toggle" id="register-password-confirm-toggle"></i>
+                <div id="password-match-error" style="color: var(--danger); font-size: 14px; margin-top: 5px; display: none;">Паролі не співпадають</div>
             </div>
             
-            <button type="submit" class="btn">Зареєструватися</button>
+            <button type="submit" class="btn" id="register-btn" disabled>Зареєструватися</button>
             
             <div class="form-footer">
                 <p>Вже є акаунт? <a href="login.html">Увійти</a></p>
@@ -195,27 +239,189 @@
                 e.preventDefault();
                 register();
             });
+            
+            // Додаємо перемикачі видимості пароля
+            const passwordToggle = document.getElementById('register-password-toggle');
+            const passwordInput = document.getElementById('register-password');
+            const passwordConfirmToggle = document.getElementById('register-password-confirm-toggle');
+            const passwordConfirmInput = document.getElementById('register-password-confirm');
+            
+            passwordToggle.addEventListener('click', function() {
+                if (passwordInput.type === 'password') {
+                    passwordInput.type = 'text';
+                    passwordToggle.classList.remove('fa-eye');
+                    passwordToggle.classList.add('fa-eye-slash');
+                } else {
+                    passwordInput.type = 'password';
+                    passwordToggle.classList.remove('fa-eye-slash');
+                    passwordToggle.classList.add('fa-eye');
+                }
+            });
+            
+            passwordConfirmToggle.addEventListener('click', function() {
+                if (passwordConfirmInput.type === 'password') {
+                    passwordConfirmInput.type = 'text';
+                    passwordConfirmToggle.classList.remove('fa-eye');
+                    passwordConfirmToggle.classList.add('fa-eye-slash');
+                } else {
+                    passwordConfirmInput.type = 'password';
+                    passwordConfirmToggle.classList.remove('fa-eye-slash');
+                    passwordConfirmToggle.classList.add('fa-eye');
+                }
+            });
+            
+            // Перевірка складності пароля
+            passwordInput.addEventListener('input', function() {
+                checkPasswordStrength(this.value);
+                validateForm();
+            });
+            
+            // Перевірка співпадіння паролів
+            passwordConfirmInput.addEventListener('input', function() {
+                checkPasswordMatch();
+                validateForm();
+            });
+            
+            // Перевірка унікальності email
+            document.getElementById('register-email').addEventListener('blur', function() {
+                checkEmailUnique(this.value);
+                validateForm();
+            });
         };
+        
+        // Перевірка складності пароля
+        function checkPasswordStrength(password) {
+            const strengthBar = document.getElementById('password-strength-bar');
+            const strengthText = document.getElementById('password-strength-text');
+            
+            let strength = 0;
+            let tips = "";
+            
+            // Перевірка довжини пароля
+            if (password.length < 6) {
+                tips = "Пароль занадто короткий";
+            } else {
+                strength += 1;
+            }
+            
+            // Перевірка на наявність букв у різних регістрах
+            if (password.match(/([a-z].*[A-Z])|([A-Z].*[a-z])/)) {
+                strength += 1;
+            } else {
+                tips = "Додайте літери у верхньому та нижньому регістрі";
+            }
+            
+            // Перевірка на наявність цифр
+            if (password.match(/([0-9])/)) {
+                strength += 1;
+            } else {
+                tips = "Додайте цифри";
+            }
+            
+            // Перевірка на наявність спеціальних символів
+            if (password.match(/([!,@,#,$,%,^,&,*,?,_,~])/)) {
+                strength += 1;
+            } else {
+                tips = "Додайте спеціальні символи";
+            }
+            
+            // Оновлення індикатора
+            if (strength === 0) {
+                strengthBar.style.width = "0%";
+                strengthBar.style.background = "#dc3545";
+                strengthText.textContent = tips || "Пароль дуже слабкий";
+                strengthText.style.color = "#dc3545";
+                return 0;
+            } else if (strength === 1) {
+                strengthBar.style.width = "25%";
+                strengthBar.style.background = "#dc3545";
+                strengthText.textContent = tips || "Пароль слабкий";
+                strengthText.style.color = "#dc3545";
+                return 1;
+            } else if (strength === 2) {
+                strengthBar.style.width = "50%";
+                strengthBar.style.background = "#ffc107";
+                strengthText.textContent = tips || "Пароль середній";
+                strengthText.style.color = "#ffc107";
+                return 2;
+            } else if (strength === 3) {
+                strengthBar.style.width = "75%";
+                strengthBar.style.background = "#28a745";
+                strengthText.textContent = tips || "Пароль хороший";
+                strengthText.style.color = "#28a745";
+                return 3;
+            } else {
+                strengthBar.style.width = "100%";
+                strengthBar.style.background = "#28a745";
+                strengthText.textContent = "Пароль відмінний";
+                strengthText.style.color = "#28a745";
+                return 4;
+            }
+        }
+        
+        // Перевірка співпадіння паролів
+        function checkPasswordMatch() {
+            const password = document.getElementById('register-password').value;
+            const confirmPassword = document.getElementById('register-password-confirm').value;
+            const errorElement = document.getElementById('password-match-error');
+            
+            if (password && confirmPassword && password !== confirmPassword) {
+                errorElement.style.display = 'block';
+                return false;
+            } else {
+                errorElement.style.display = 'none';
+                return true;
+            }
+        }
+        
+        // Перевірка унікальності email
+        function checkEmailUnique(email) {
+            const errorElement = document.getElementById('email-error');
+            const users = JSON.parse(localStorage.getItem('users')) || [];
+            
+            const emailExists = users.some(user => user.email === email);
+            
+            if (emailExists) {
+                errorElement.style.display = 'block';
+                return false;
+            } else {
+                errorElement.style.display = 'none';
+                return true;
+            }
+        }
+        
+        // Валідація форми
+        function validateForm() {
+            const name = document.getElementById('register-name').value;
+            const email = document.getElementById('register-email').value;
+            const password = document.getElementById('register-password').value;
+            const confirmPassword = document.getElementById('register-password-confirm').value;
+            
+            const passwordStrength = checkPasswordStrength(password);
+            const passwordsMatch = checkPasswordMatch();
+            const emailUnique = checkEmailUnique(email);
+            
+            const registerBtn = document.getElementById('register-btn');
+            
+            if (name && email && password && confirmPassword && passwordStrength >= 2 && passwordsMatch && emailUnique) {
+                registerBtn.disabled = false;
+            } else {
+                registerBtn.disabled = true;
+            }
+        }
         
         // Реєстрація
         function register() {
             const name = document.getElementById('register-name').value;
             const email = document.getElementById('register-email').value;
             const password = document.getElementById('register-password').value;
-            const passwordConfirm = document.getElementById('register-password-confirm').value;
             
-            if (!name || !email || !password) {
-                alert('Будь ласка, заповніть всі поля');
-                return;
-            }
+            // Отримуємо всіх користувачів
+            const users = JSON.parse(localStorage.getItem('users')) || [];
             
-            if (password !== passwordConfirm) {
-                alert('Паролі не співпадають');
-                return;
-            }
-            
-            // Зберігаємо дані користувача
-            const userData = {
+            // Створюємо нового користувача
+            const newUser = {
+                id: Date.now().toString(),
                 name: name,
                 email: email,
                 password: password,
@@ -225,10 +431,17 @@
                 grades: []
             };
             
-            localStorage.setItem('userData', JSON.stringify(userData));
+            // Додаємо користувача до масиву
+            users.push(newUser);
+            
+            // Зберігаємо оновлений масив
+            localStorage.setItem('users', JSON.stringify(users));
+            
+            // Автоматично входимо
+            localStorage.setItem('currentUser', JSON.stringify(newUser));
             localStorage.setItem('isLoggedIn', 'true');
             
-            alert('Реєстрація успішна!');
+            alert('Реєстрація успішна! Ласкаво просимо!');
             window.location.href = 'dashboard.html';
         }
     </script>
