@@ -916,7 +916,7 @@
         <div class="header">
             <h1 id="greeting">Ласкаво просимо!</h1>
             <div class="user-info">
-                <img src="" alt="Аватар" class="user-avatar" id="userAvatar">
+                <img src="https://ui-avatars.com/api/?name=User&background=4a6fa5&color=fff" alt="Аватар" class="user-avatar" id="userAvatar">
                 <div>
                     <h3 id="userName"></h3>
                     <p id="userEmail"></p>
@@ -976,7 +976,7 @@
         <section id="profile-section" class="dashboard-section">
             <div class="profile-container">
                 <div class="profile-header">
-                    <img src="" alt="Аватар" class="profile-avatar" id="profileAvatar">
+                    <img src="https://ui-avatars.com/api/?name=User&background=4a6fa5&color=fff" alt="Аватар" class="profile-avatar" id="profileAvatar">
                     <div class="profile-info">
                         <h2 id="profileName"></h2>
                         <p id="profileEmail"></p>
@@ -1151,6 +1151,9 @@
     <script>
         // Check if user is logged in
         window.onload = function() {
+            // Initialize default data if not exists
+            initializeDefaultData();
+            
             const isLoggedIn = localStorage.getItem('isLoggedIn');
             if (!isLoggedIn || isLoggedIn !== 'true') {
                 window.location.href = 'index.html';
@@ -1162,13 +1165,12 @@
             if (userData) {
                 document.getElementById('userName').textContent = userData.name;
                 document.getElementById('userEmail').textContent = userData.email;
-                document.getElementById('userAvatar').src = userData.avatar;
+                document.getElementById('userAvatar').src = userData.avatar || 'https://ui-avatars.com/api/?name=User&background=4a6fa5&color=fff';
                 document.getElementById('profileName').textContent = userData.name;
                 document.getElementById('profileEmail').textContent = userData.email;
-                document.getElementById('profileAvatar').src = userData.avatar;
+                document.getElementById('profileAvatar').src = userData.avatar || 'https://ui-avatars.com/api/?name=User&background=4a6fa5&color=fff';
                 document.getElementById('profile-name').value = userData.name;
                 document.getElementById('profile-email').value = userData.email;
-                document.getElementById('profile-avatar').value = userData.avatar;
                 
                 // Set greeting based on time of day
                 const hour = new Date().getHours();
@@ -1186,13 +1188,128 @@
             setupEventListeners();
         };
         
+        // Initialize default data
+        function initializeDefaultData() {
+            // Initialize homework if not exists
+            if (!localStorage.getItem('homework')) {
+                const defaultHomework = [
+                    {
+                        id: '1',
+                        subject: 'Математика',
+                        title: 'Виконати вправи 1-5',
+                        dueDate: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+                        priority: 'high',
+                        description: 'Сторінка 42, задачі на логіку',
+                        completed: false,
+                        createdAt: new Date().toISOString()
+                    },
+                    {
+                        id: '2',
+                        subject: 'Українська мова',
+                        title: 'Підготувати твір',
+                        dueDate: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+                        priority: 'normal',
+                        description: 'Тема: "Мій улюблений письменник"',
+                        completed: false,
+                        createdAt: new Date().toISOString()
+                    }
+                ];
+                localStorage.setItem('homework', JSON.stringify(defaultHomework));
+            }
+            
+            // Initialize schedule if not exists
+            if (!localStorage.getItem('schedule')) {
+                const defaultSchedule = [
+                    {
+                        id: '1',
+                        subject: 'Математика',
+                        day: '1',
+                        time: '09:00',
+                        room: '101'
+                    },
+                    {
+                        id: '2',
+                        subject: 'Українська мова',
+                        day: '1',
+                        time: '10:30',
+                        room: '205'
+                    },
+                    {
+                        id: '3',
+                        subject: 'Англійська мова',
+                        day: '2',
+                        time: '09:00',
+                        room: '304'
+                    }
+                ];
+                localStorage.setItem('schedule', JSON.stringify(defaultSchedule));
+            }
+            
+            // Initialize grades if not exists
+            if (!localStorage.getItem('grades')) {
+                const defaultGrades = [
+                    {
+                        id: '1',
+                        subject: 'Математика',
+                        title: 'Контрольна робота',
+                        grade: 10,
+                        date: new Date().toISOString()
+                    },
+                    {
+                        id: '2',
+                        subject: 'Математика',
+                        title: 'Самостійна робота',
+                        grade: 9,
+                        date: new Date().toISOString()
+                    },
+                    {
+                        id: '3',
+                        subject: 'Українська мова',
+                        title: 'Твір',
+                        grade: 11,
+                        date: new Date().toISOString()
+                    }
+                ];
+                localStorage.setItem('grades', JSON.stringify(defaultGrades));
+            }
+            
+            // Initialize activities if not exists
+            if (!localStorage.getItem('activities')) {
+                const defaultActivities = [
+                    {
+                        id: '1',
+                        text: 'Додано нове домашнє завдання з Математики',
+                        timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
+                        icon: 'fas fa-book'
+                    },
+                    {
+                        id: '2',
+                        text: 'Оновлено розклад уроків',
+                        timestamp: new Date(Date.now() - 5 * 60 * 60 * 1000).toISOString(),
+                        icon: 'fas fa-calendar'
+                    }
+                ];
+                localStorage.setItem('activities', JSON.stringify(defaultActivities));
+            }
+            
+            // Initialize current week if not exists
+            if (!localStorage.getItem('currentWeek')) {
+                const currentWeek = Math.ceil((new Date().getDate() + new Date(new Date().getFullYear(), 0, 1).getDay()) / 7);
+                localStorage.setItem('currentWeek', currentWeek.toString());
+            }
+        }
+        
         // Initialize dashboard with data
         function initDashboard() {
             loadHomework();
             loadSchedule();
             loadGrades();
+            loadActivities();
             updateStats();
             initCharts();
+            
+            // Set current week
+            document.getElementById('currentWeek').textContent = `Тиждень ${localStorage.getItem('currentWeek') || '1'}`;
         }
         
         // Set up event listeners
@@ -1250,6 +1367,11 @@
                 togglePasswordVisibility('profile-password-confirm', 'profile-password-confirm-toggle');
             });
             
+            // Avatar upload
+            document.getElementById('profile-avatar').addEventListener('change', function(e) {
+                handleAvatarUpload(e.target.files[0]);
+            });
+            
             // Modal buttons
             document.getElementById('addHomeworkBtn').addEventListener('click', function() {
                 openHomeworkModal();
@@ -1297,6 +1419,27 @@
             }
         }
         
+        // Handle avatar upload
+        function handleAvatarUpload(file) {
+            if (!file || !file.type.match('image.*')) {
+                alert('Будь ласка, виберіть зображення');
+                return;
+            }
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const avatarDataUrl = e.target.result;
+                
+                // Show preview
+                document.getElementById('avatar-preview').style.display = 'block';
+                document.getElementById('avatar-preview-img').src = avatarDataUrl;
+                
+                // Save temporarily for later use
+                localStorage.setItem('tempAvatar', avatarDataUrl);
+            };
+            reader.readAsDataURL(file);
+        }
+        
         // Navigate to section
         function navigateTo(section) {
             // Update active nav link
@@ -1328,7 +1471,6 @@
         function saveProfile() {
             const name = document.getElementById('profile-name').value;
             const email = document.getElementById('profile-email').value;
-            const avatar = document.getElementById('profile-avatar').value;
             const password = document.getElementById('profile-password').value;
             const passwordConfirm = document.getElementById('profile-password-confirm').value;
             
@@ -1353,10 +1495,17 @@
                 return;
             }
             
+            // Get uploaded avatar if exists
+            const avatarDataUrl = localStorage.getItem('tempAvatar');
+            
             // Update user data
             currentUser.name = name;
             currentUser.email = email;
-            if (avatar) currentUser.avatar = avatar;
+            if (avatarDataUrl) {
+                currentUser.avatar = avatarDataUrl;
+                // Remove temporary data
+                localStorage.removeItem('tempAvatar');
+            }
             if (password) currentUser.password = password;
             
             // Update users array
@@ -1377,7 +1526,7 @@
             document.getElementById('profileEmail').textContent = currentUser.email;
             document.getElementById('profileAvatar').src = currentUser.avatar;
             
-            // Оновити привітання
+            // Update greeting
             const hour = new Date().getHours();
             let greeting = 'Добрий день';
             if (hour < 6) greeting = 'Доброї ночі';
@@ -1387,119 +1536,123 @@
             document.getElementById('greeting').textContent = `${greeting}, ${currentUser.name.split(' ')[0]}!`;
             
             alert('Профіль успішно оновлено!');
-            }
-            
-            // Скинути форму профілю
-            function resetProfileForm() {
+        }
+        
+        // Reset profile form
+        function resetProfileForm() {
             const currentUser = JSON.parse(localStorage.getItem('currentUser'));
             document.getElementById('profile-name').value = currentUser.name;
             document.getElementById('profile-email').value = currentUser.email;
-            document.getElementById('profile-avatar').value = currentUser.avatar;
             document.getElementById('profile-password').value = '';
             document.getElementById('profile-password-confirm').value = '';
-            }
             
-            // Завантажити домашні завдання
-            function loadHomework() {
+            // Reset file upload field
+            document.getElementById('profile-avatar').value = '';
+            document.getElementById('avatar-preview').style.display = 'none';
+            localStorage.removeItem('tempAvatar');
+        }
+        
+        // Load homework
+        function loadHomework() {
             const homework = JSON.parse(localStorage.getItem('homework')) || [];
             const homeworkList = document.getElementById('homeworkList');
             homeworkList.innerHTML = '';
             
             if (homework.length === 0) {
-            homeworkList.innerHTML = '<p class="no-data">Немає домашніх завдань</p>';
-            return;
+                homeworkList.innerHTML = '<p class="no-data">Немає домашніх завдань</p>';
+                return;
             }
             
             homework.sort((a, b) => new Date(a.dueDate) - new Date(b.dueDate)).forEach(hw => {
-            const hwItem = document.createElement('div');
-            hwItem.className = `homework-item ${hw.completed ? 'completed' : ''} ${isUrgent(hw.dueDate) ? 'urgent' : ''}`;
-            
-            const dueDate = new Date(hw.dueDate);
-            const now = new Date();
-            const isOverdue = !hw.completed && dueDate < now;
-            
-            hwItem.innerHTML = `
-                <h3 class="homework-title">${hw.subject} - ${hw.title}</h3>
-                <div class="homework-meta">
-                    <span><i class="fas fa-calendar"></i> ${formatDate(dueDate)}</span>
-                    <span class="${isOverdue ? 'text-danger' : ''}">${isOverdue ? 'Прострочено' : getDaysLeft(dueDate)}</span>
-                </div>
-                ${hw.description ? `<p>${hw.description}</p>` : ''}
-                <div class="homework-actions">
-                    ${!hw.completed ? `
-                        <button class="homework-btn complete-btn" data-id="${hw.id}">
-                            <i class="fas fa-check"></i> Завершити
+                const hwItem = document.createElement('div');
+                hwItem.className = `homework-item ${hw.completed ? 'completed' : ''} ${isUrgent(hw.dueDate) ? 'urgent' : ''}`;
+                
+                const dueDate = new Date(hw.dueDate);
+                const now = new Date();
+                const isOverdue = !hw.completed && dueDate < now;
+                
+                hwItem.innerHTML = `
+                    <h3 class="homework-title">${hw.subject} - ${hw.title}</h3>
+                    <div class="homework-meta">
+                        <span><i class="fas fa-calendar"></i> ${formatDate(dueDate)}</span>
+                        <span class="${isOverdue ? 'text-danger' : ''}">${isOverdue ? 'Прострочено' : getDaysLeft(dueDate)}</span>
+                    </div>
+                    ${hw.description ? `<p>${hw.description}</p>` : ''}
+                    <div class="homework-actions">
+                        ${!hw.completed ? `
+                            <button class="homework-btn complete-btn" data-id="${hw.id}">
+                                <i class="fas fa-check"></i> Завершити
+                            </button>
+                        ` : ''}
+                        <button class="homework-btn edit-btn" data-id="${hw.id}">
+                            <i class="fas fa-edit"></i> Редагувати
                         </button>
-                    ` : ''}
-                    <button class="homework-btn edit-btn" data-id="${hw.id}">
-                        <i class="fas fa-edit"></i> Редагувати
-                    </button>
-                    <button class="homework-btn delete-btn" data-id="${hw.id}">
-                        <i class="fas fa-trash"></i> Видалити
-                    </button>
-                </div>
-            `;
-            
-            homeworkList.appendChild(hwItem);
+                        <button class="homework-btn delete-btn" data-id="${hw.id}">
+                            <i class="fas fa-trash"></i> Видалити
+                        </button>
+                    </div>
+                `;
+                
+                homeworkList.appendChild(hwItem);
             });
             
-            // Додати обробники подій для кнопок
+            // Add event handlers for buttons
             document.querySelectorAll('.complete-btn').forEach(btn => {
-            btn.addEventListener('click', function() {
-                completeHomework(this.dataset.id);
-            });
+                btn.addEventListener('click', function() {
+                    completeHomework(this.dataset.id);
+                });
             });
             
             document.querySelectorAll('.edit-btn').forEach(btn => {
-            btn.addEventListener('click', function() {
-                editHomework(this.dataset.id);
-            });
+                btn.addEventListener('click', function() {
+                    editHomework(this.dataset.id);
+                });
             });
             
             document.querySelectorAll('.delete-btn').forEach(btn => {
-            btn.addEventListener('click', function() {
-                deleteHomework(this.dataset.id);
+                btn.addEventListener('click', function() {
+                    deleteHomework(this.dataset.id);
+                });
             });
-            });
-            }
-            
-            // Відкрити модальне вікно для домашнього завдання
-            function openHomeworkModal(hwId = null) {
+        }
+        
+        // Open homework modal
+        function openHomeworkModal(hwId = null) {
             const modal = document.getElementById('homeworkModal');
             const title = document.getElementById('homeworkModalTitle');
             
             if (hwId) {
-            title.textContent = 'Редагувати домашнє завдання';
-            const homework = JSON.parse(localStorage.getItem('homework')).find(hw => hw.id === hwId);
-            
-            document.getElementById('hwSubject').value = homework.subject;
-            document.getElementById('hwTitle').value = homework.title;
-            document.getElementById('hwDueDate').value = homework.dueDate;
-            document.getElementById('hwPriority').value = homework.priority;
-            document.getElementById('hwDescription').value = homework.description || '';
-            
-            // Зберегти ID для подальшого використання
-            modal.dataset.editId = hwId;
+                title.textContent = 'Редагувати домашнє завдання';
+                const homework = JSON.parse(localStorage.getItem('homework')).find(hw => hw.id === hwId);
+                
+                document.getElementById('hwSubject').value = homework.subject;
+                document.getElementById('hwTitle').value = homework.title;
+                document.getElementById('hwDueDate').value = homework.dueDate;
+                document.getElementById('hwPriority').value = homework.priority;
+                document.getElementById('hwDescription').value = homework.description || '';
+                
+                // Save ID for later use
+                modal.dataset.editId = hwId;
             } else {
-            title.textContent = 'Додати домашнє завдання';
-            // Очистити форму
-            document.getElementById('hwSubject').value = '';
-            document.getElementById('hwTitle').value = '';
-            document.getElementById('hwDueDate').value = '';
-            document.getElementById('hwPriority').value = 'normal';
-            document.getElementById('hwDescription').value = '';
-            
-            // Видалити ID редагування, якщо він є
-            if (modal.dataset.editId) {
-                delete modal.dataset.editId;
-            }
+                title.textContent = 'Додати домашнє завдання';
+                // Clear form
+                document.getElementById('hwSubject').value = '';
+                document.getElementById('hwTitle').value = '';
+                document.getElementById('hwDueDate').value = '';
+                document.getElementById('hwPriority').value = 'normal';
+                document.getElementById('hwDescription').value = '';
+                
+                // Remove edit ID if exists
+                if (modal.dataset.editId) {
+                    delete modal.dataset.editId;
+                }
             }
             
             modal.classList.add('active');
-            }
-            
-            // Зберегти домашнє завдання
-            function saveHomework() {
+        }
+        
+        // Save homework
+        function saveHomework() {
             const subject = document.getElementById('hwSubject').value;
             const title = document.getElementById('hwTitle').value;
             const dueDate = document.getElementById('hwDueDate').value;
@@ -1507,158 +1660,161 @@
             const description = document.getElementById('hwDescription').value;
             
             if (!subject || !title || !dueDate) {
-            alert('Будь ласка, заповніть обов\'язкові поля');
-            return;
+                alert('Будь ласка, заповніть обов\'язкові поля');
+                return;
             }
             
             const homework = JSON.parse(localStorage.getItem('homework')) || [];
             const modal = document.getElementById('homeworkModal');
             
             if (modal.dataset.editId) {
-            // Редагувати існуюче завдання
-            const index = homework.findIndex(hw => hw.id === modal.dataset.editId);
-            if (index !== -1) {
-                homework[index] = {
-                    ...homework[index],
+                // Edit existing homework
+                const index = homework.findIndex(hw => hw.id === modal.dataset.editId);
+                if (index !== -1) {
+                    homework[index] = {
+                        ...homework[index],
+                        subject,
+                        title,
+                        dueDate,
+                        priority,
+                        description
+                    };
+                }
+            } else {
+                // Add new homework
+                const newHomework = {
+                    id: Date.now().toString(),
                     subject,
                     title,
                     dueDate,
                     priority,
-                    description
+                    description,
+                    completed: false,
+                    createdAt: new Date().toISOString()
                 };
-            }
-            } else {
-            // Додати нове завдання
-            const newHomework = {
-                id: Date.now().toString(),
-                subject,
-                title,
-                dueDate,
-                priority,
-                description,
-                completed: false,
-                createdAt: new Date().toISOString()
-            };
-            homework.push(newHomework);
+                homework.push(newHomework);
             }
             
             localStorage.setItem('homework', JSON.stringify(homework));
             modal.classList.remove('active');
             loadHomework();
             updateStats();
-            }
-            
-            // Завершити домашнє завдання
-            function completeHomework(id) {
+            addActivity(`Додано домашнє завдання: ${subject} - ${title}`);
+        }
+        
+        // Complete homework
+        function completeHomework(id) {
             const homework = JSON.parse(localStorage.getItem('homework')) || [];
             const index = homework.findIndex(hw => hw.id === id);
             
             if (index !== -1) {
-            homework[index].completed = true;
-            homework[index].completedAt = new Date().toISOString();
-            localStorage.setItem('homework', JSON.stringify(homework));
-            loadHomework();
-            updateStats();
-            addActivity(`Завершено домашнє завдання: ${homework[index].subject} - ${homework[index].title}`);
+                homework[index].completed = true;
+                homework[index].completedAt = new Date().toISOString();
+                localStorage.setItem('homework', JSON.stringify(homework));
+                loadHomework();
+                updateStats();
+                addActivity(`Завершено домашнє завдання: ${homework[index].subject} - ${homework[index].title}`);
             }
-            }
-            
-            // Редагувати домашнє завдання
-            function editHomework(id) {
+        }
+        
+        // Edit homework
+        function editHomework(id) {
             openHomeworkModal(id);
-            }
-            
-            // Видалити домашнє завдання
-            function deleteHomework(id) {
+        }
+        
+        // Delete homework
+        function deleteHomework(id) {
             if (confirm('Ви впевнені, що хочете видалити це завдання?')) {
-            let homework = JSON.parse(localStorage.getItem('homework')) || [];
-            homework = homework.filter(hw => hw.id !== id);
-            localStorage.setItem('homework', JSON.stringify(homework));
-            loadHomework();
-            updateStats();
+                let homework = JSON.parse(localStorage.getItem('homework')) || [];
+                const deletedHomework = homework.find(hw => hw.id === id);
+                homework = homework.filter(hw => hw.id !== id);
+                localStorage.setItem('homework', JSON.stringify(homework));
+                loadHomework();
+                updateStats();
+                addActivity(`Видалено домашнє завдання: ${deletedHomework.subject} - ${deletedHomework.title}`);
             }
-            }
-            
-            // Завантажити розклад
-            function loadSchedule() {
+        }
+        
+        // Load schedule
+        function loadSchedule() {
             const schedule = JSON.parse(localStorage.getItem('schedule')) || [];
             const scheduleGrid = document.getElementById('scheduleGrid');
             scheduleGrid.innerHTML = '';
             
             const days = [
-            { id: 1, name: 'Понеділок' },
-            { id: 2, name: 'Вівторок' },
-            { id: 3, name: 'Середа' },
-            { id: 4, name: 'Четвер' },
-            { id: 5, name: 'П\'ятниця' },
-            { id: 6, name: 'Субота' },
-            { id: 7, name: 'Неділя' }
+                { id: 1, name: 'Понеділок' },
+                { id: 2, name: 'Вівторок' },
+                { id: 3, name: 'Середа' },
+                { id: 4, name: 'Четвер' },
+                { id: 5, name: 'П\'ятниця' },
+                { id: 6, name: 'Субота' },
+                { id: 7, name: 'Неділя' }
             ];
             
             days.forEach(day => {
-            const dayElement = document.createElement('div');
-            dayElement.className = 'schedule-day';
-            
-            const dayHeader = document.createElement('div');
-            dayHeader.className = 'day-header';
-            dayHeader.innerHTML = `
-                <h3>${day.name}</h3>
-                <p>${formatDate(new Date(), day.id - 1)}</p>
-            `;
-            
-            const lessonsList = document.createElement('ul');
-            lessonsList.className = 'schedule-lessons';
-            
-            // Отримати уроки для цього дня
-            const dayLessons = schedule
-            .filter(lesson => parseInt(lesson.day) === day.id)
-            .sort((a, b) => a.time.localeCompare(b.time));
-            
-            if (dayLessons.length === 0) {
-            lessonsList.innerHTML = '<p class="no-lessons">Немає уроків</p>';
-            } else {
-            dayLessons.forEach(lesson => {
-                const lessonElement = document.createElement('li');
-                lessonElement.className = 'schedule-lesson';
-                lessonElement.innerHTML = `
-                    <div class="lesson-time">${lesson.time}</div>
-                    <div class="lesson-name">${lesson.subject}</div>
-                    <div class="lesson-room">${lesson.room || 'Каб. не вказано'}</div>
+                const dayElement = document.createElement('div');
+                dayElement.className = 'schedule-day';
+                
+                const dayHeader = document.createElement('div');
+                dayHeader.className = 'day-header';
+                dayHeader.innerHTML = `
+                    <h3>${day.name}</h3>
+                    <p>${formatDate(new Date(), day.id - 1)}</p>
                 `;
-                lessonsList.appendChild(lessonElement);
+                
+                const lessonsList = document.createElement('ul');
+                lessonsList.className = 'schedule-lessons';
+                
+                // Get lessons for this day
+                const dayLessons = schedule
+                    .filter(lesson => parseInt(lesson.day) === day.id)
+                    .sort((a, b) => a.time.localeCompare(b.time));
+                
+                if (dayLessons.length === 0) {
+                    lessonsList.innerHTML = '<p class="no-lessons">Немає уроків</p>';
+                } else {
+                    dayLessons.forEach(lesson => {
+                        const lessonElement = document.createElement('li');
+                        lessonElement.className = 'schedule-lesson';
+                        lessonElement.innerHTML = `
+                            <div class="lesson-time">${lesson.time}</div>
+                            <div class="lesson-name">${lesson.subject}</div>
+                            <div class="lesson-room">${lesson.room || 'Каб. не вказано'}</div>
+                        `;
+                        lessonsList.appendChild(lessonElement);
+                    });
+                }
+                
+                dayElement.appendChild(dayHeader);
+                dayElement.appendChild(lessonsList);
+                scheduleGrid.appendChild(dayElement);
             });
-            }
-            
-            dayElement.appendChild(dayHeader);
-            dayElement.appendChild(lessonsList);
-            scheduleGrid.appendChild(dayElement);
-            });
-            }
-            
-            // Відкрити модальне вікно для уроку
-            function openLessonModal() {
+        }
+        
+        // Open lesson modal
+        function openLessonModal() {
             document.getElementById('lessonModal').classList.add('active');
-            }
-            
-            // Зберегти урок
-            function saveLesson() {
+        }
+        
+        // Save lesson
+        function saveLesson() {
             const subject = document.getElementById('lessonSubject').value;
             const day = document.getElementById('lessonDay').value;
             const time = document.getElementById('lessonTime').value;
             const room = document.getElementById('lessonRoom').value;
             
             if (!subject || !day || !time) {
-            alert('Будь ласка, заповніть обов\'язкові поля');
-            return;
+                alert('Будь ласка, заповніть обов\'язкові поля');
+                return;
             }
             
             const schedule = JSON.parse(localStorage.getItem('schedule')) || [];
             const newLesson = {
-            id: Date.now().toString(),
-            subject,
-            day,
-            time,
-            room
+                id: Date.now().toString(),
+                subject,
+                day,
+                time,
+                room
             };
             
             schedule.push(newLesson);
@@ -1668,247 +1824,209 @@
             loadSchedule();
             updateStats();
             addActivity(`Додано урок: ${subject}`);
-            }
-            
-            // Завантажити оцінки
-            function loadGrades() {
+        }
+        
+        // Load grades
+        function loadGrades() {
             const grades = JSON.parse(localStorage.getItem('grades')) || [];
             const gradesGrid = document.getElementById('gradesGrid');
             gradesGrid.innerHTML = '';
             
-            // Групувати оцінки за предметами
+            // Group grades by subject
             const subjects = {};
             
             grades.forEach(grade => {
-            if (!subjects[grade.subject]) {
-            subjects[grade.subject] = [];
-            }
-            subjects[grade.subject].push(grade);
+                if (!subjects[grade.subject]) {
+                    subjects[grade.subject] = [];
+                }
+                subjects[grade.subject].push(grade);
             });
             
-            // Створити картки для кожного предмета
+            // Create cards for each subject
             Object.keys(subjects).forEach(subject => {
-            const subjectGrades = subjects[subject];
-            const averageGrade = calculateAverage(subjectGrades.map(g => g.grade));
-            
-            const subjectCard = document.createElement('div');
-            subjectCard.className = 'subject-card';
-            
-            subjectCard.innerHTML = `
-                <div class="subject-header">
-                    <div class="subject-name">${subject}</div>
-                    <div class="subject-avg">${averageGrade.toFixed(1)}</div>
-                </div>
-                <ul class="grades-list">
-                    ${subjectGrades.map(grade => `
-                        <li class="grade-item">
-                            <span>${grade.title || 'Оцінка'}</span>
-                            <span class="grade-value">${grade.grade}</span>
-                        </li>
-                    `).join('')}
-                </ul>
-                <div class="grade-stats">
-                    <div class="grade-stat">
-                        <div class="grade-stat-value">${subjectGrades.length}</div>
-                        <div class="grade-stat-label">Оцінок</div>
+                const subjectGrades = subjects[subject];
+                const averageGrade = calculateAverage(subjectGrades.map(g => g.grade));
+                
+                const subjectCard = document.createElement('div');
+                subjectCard.className = 'subject-card';
+                
+                subjectCard.innerHTML = `
+                    <div class="subject-header">
+                        <div class="subject-name">${subject}</div>
+                        <div class="subject-avg">${averageGrade.toFixed(1)}</div>
                     </div>
-                    <div class="grade-stat">
-                        <div class="grade-stat-value">${Math.max(...subjectGrades.map(g => g.grade))}</div>
-                        <div class="grade-stat-label">Макс.</div>
+                    <ul class="grades-list">
+                        ${subjectGrades.map(grade => `
+                            <li class="grade-item">
+                                <span>${grade.title || 'Оцінка'}</span>
+                                <span class="grade-value">${grade.grade}</span>
+                            </li>
+                        `).join('')}
+                    </ul>
+                    <div class="grade-stats">
+                        <div class="grade-stat">
+                            <div class="grade-stat-value">${subjectGrades.length}</div>
+                            <div class="grade-stat-label">Оцінок</div>
+                        </div>
+                        <div class="grade-stat">
+                            <div class="grade-stat-value">${Math.max(...subjectGrades.map(g => g.grade))}</div>
+                            <div class="grade-stat-label">Макс.</div>
+                        </div>
+                        <div class="grade-stat">
+                            <div class="grade-stat-value">${Math.min(...subjectGrades.map(g => g.grade))}</div>
+                            <div class="grade-stat-label">Мін.</div>
+                        </div>
                     </div>
-                    <div class="grade-stat">
-                        <div class="grade-stat-value">${Math.min(...subjectGrades.map(g => g.grade))}</div>
-                        <div class="grade-stat-label">Мін.</div>
-                    </div>
-                </div>
-            `;
-            
-            gradesGrid.appendChild(subjectCard);
+                `;
+                
+                gradesGrid.appendChild(subjectCard);
             });
-            }
-            
-            // Оновити статистику
-            function updateStats() {
+        }
+        
+        // Update stats
+        function updateStats() {
             const homework = JSON.parse(localStorage.getItem('homework')) || [];
             const schedule = JSON.parse(localStorage.getItem('schedule')) || [];
             const grades = JSON.parse(localStorage.getItem('grades')) || [];
             
-            // Оновити кількість домашніх завдань
+            // Update homework count
             const pendingHomework = homework.filter(hw => !hw.completed).length;
             document.getElementById('homeworkCount').textContent = pendingHomework;
             
-            // Оновити кількість уроків
+            // Update lessons count
             document.getElementById('lessonsCount').textContent = schedule.length;
             
-            // Оновити середній бал
+            // Update average grade
             const allGrades = grades.map(g => g.grade);
             const averageGrade = allGrades.length > 0 ? 
                 (allGrades.reduce((sum, grade) => sum + grade, 0) / allGrades.length).toFixed(1) : 
                 '0.0';
             document.getElementById('averageGrade').textContent = averageGrade;
-            }
-            
-            // Додати активність
-            function addActivity(text) {
+        }
+        
+        // Add activity
+        function addActivity(text) {
             const activities = JSON.parse(localStorage.getItem('activities')) || [];
             const newActivity = {
-            id: Date.now().toString(),
-            text,
-            timestamp: new Date().toISOString(),
-            icon: 'fas fa-check-circle'
+                id: Date.now().toString(),
+                text,
+                timestamp: new Date().toISOString(),
+                icon: 'fas fa-check-circle'
             };
             
             activities.unshift(newActivity);
-            // Зберегти тільки останні 5 активностей
+            // Keep only the last 5 activities
             localStorage.setItem('activities', JSON.stringify(activities.slice(0, 5)));
             
             loadActivities();
-            }
-            
-            // Завантажити активності
-            function loadActivities() {
+        }
+        
+        // Load activities
+        function loadActivities() {
             const activities = JSON.parse(localStorage.getItem('activities')) || [];
             const activityList = document.getElementById('activityList');
             activityList.innerHTML = '';
             
             if (activities.length === 0) {
-            activityList.innerHTML = '<p class="no-data">Немає останніх активностей</p>';
-            return;
+                activityList.innerHTML = '<p class="no-data">Немає останніх активностей</p>';
+                return;
             }
             
             activities.forEach(activity => {
-            const activityItem = document.createElement('li');
-            activityItem.className = 'activity-item';
-            
-            activityItem.innerHTML = `
-                <div class="activity-icon">
-                    <i class="${activity.icon}"></i>
-                </div>
-                <div class="activity-content">
-                    <h4>${activity.text}</h4>
-                    <p>${formatDateTime(activity.timestamp)}</p>
-                </div>
-            `;
-            
-            activityList.appendChild(activityItem);
+                const activityItem = document.createElement('li');
+                activityItem.className = 'activity-item';
+                
+                activityItem.innerHTML = `
+                    <div class="activity-icon">
+                        <i class="${activity.icon}"></i>
+                    </div>
+                    <div class="activity-content">
+                        <h4>${activity.text}</h4>
+                        <p>${formatDateTime(activity.timestamp)}</p>
+                    </div>
+                `;
+                
+                activityList.appendChild(activityItem);
             });
-            }
-            
-            // Ініціалізувати графіки
-            function initCharts() {
-            // Графік успішності за предметами
+        }
+        
+        // Initialize charts
+        function initCharts() {
+            // Grades by subject chart
             const grades = JSON.parse(localStorage.getItem('grades')) || [];
             const subjects = {};
             
             grades.forEach(grade => {
-            if (!subjects[grade.subject]) {
-            subjects[grade.subject] = [];
-            }
-            subjects[grade.subject].push(grade);
+                if (!subjects[grade.subject]) {
+                    subjects[grade.subject] = [];
+                }
+                subjects[grade.subject].push(grade);
             });
             
             const subjectNames = Object.keys(subjects);
             const subjectAverages = subjectNames.map(subject => {
-            const subjectGrades = subjects[subject].map(g => g.grade);
-            return subjectGrades.reduce((sum, grade) => sum + grade, 0) / subjectGrades.length;
+                const subjectGrades = subjects[subject].map(g => g.grade);
+                return subjectGrades.reduce((sum, grade) => sum + grade, 0) / subjectGrades.length;
             });
             
             const gradesCtx = document.getElementById('gradesChart').getContext('2d');
-            new Chart(gradesCtx, {
-            type: 'bar',
-            data: {
-                labels: subjectNames,
-                datasets: [{
-                    label: 'Середній бал',
-                    data: subjectAverages,
-                    backgroundColor: '#4a6fa5',
-                    borderColor: '#4a6fa5',
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                responsive: true,
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        max: 12
+            if (gradesCtx) {
+                new Chart(gradesCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: subjectNames,
+                        datasets: [{
+                            label: 'Середній бал',
+                            data: subjectAverages,
+                            backgroundColor: '#4a6fa5',
+                            borderColor: '#4a6fa5',
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                max: 12
+                            }
+                        }
                     }
-                }
+                });
             }
-            });
             
-            // Графік динаміки успішності
+            // Progress chart
             const progressCtx = document.getElementById('progressChart').getContext('2d');
-            new Chart(progressCtx, {
-            type: 'line',
-            data: {
-                labels: ['Січень', 'Лютий', 'Березень', 'Квітень', 'Травень', 'Червень'],
-                datasets: [{
-                    label: 'Середній бал',
-                    data: [8.2, 8.5, 9.1, 9.3, 9.7, 10.2],
-                    backgroundColor: 'rgba(74, 111, 165, 0.2)',
-                    borderColor: '#4a6fa5',
-                    borderWidth: 2,
-                    tension: 0.3,
-                    fill: true
-                }]
-            },
-            options: {
-                responsive: true,
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        max: 12
+            if (progressCtx) {
+                new Chart(progressCtx, {
+                    type: 'line',
+                    data: {
+                        labels: ['Січень', 'Лютий', 'Березень', 'Квітень', 'Травень', 'Червень'],
+                        datasets: [{
+                            label: 'Середній бал',
+                            data: [8.2, 8.5, 9.1, 9.3, 9.7, 10.2],
+                            backgroundColor: 'rgba(74, 111, 165, 0.2)',
+                            borderColor: '#4a6fa5',
+                            borderWidth: 2,
+                            tension: 0.3,
+                            fill: true
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                max: 12
+                            }
+                        }
                     }
-                }
+                });
             }
-            });
-            }
-            
-            // Допоміжні функції
-            function formatDate(date, dayOffset = 0) {
-            const targetDate = new Date(date);
-            targetDate.setDate(targetDate.getDate() + dayOffset);
-                
-            const options = { day: '2-digit', month: '2-digit', year: 'numeric' };
-            return targetDate.toLocaleDateString('uk-UA', options);
-            }
-            
-            function formatDateTime(timestamp) {
-            const date = new Date(timestamp);
-            return date.toLocaleString('uk-UA', {
-            day: '2-digit',
-            month: '2-digit',
-            year: 'numeric',
-            hour: '2-digit',
-            minute: '2-digit'
-            });
-            }
-            
-            function getDaysLeft(dueDate) {
-            const now = new Date();
-            const timeDiff = dueDate - now;
-            const daysLeft = Math.ceil(timeDiff / (1000 * 60 * 60 * 24));
-            
-            if (daysLeft === 0) return 'Сьогодні';
-            if (daysLeft === 1) return 'Завтра';
-            if (daysLeft < 0) return 'Прострочено';
-            return `Залишилось днів: ${daysLeft}`;
-            }
-            
-            function isUrgent(dueDate) {
-            const now = new Date();
-            const timeDiff = new Date(dueDate) - now;
-            const daysLeft = Math.ceil(timeDiff / (1000 * 60 * 60 * 24));
-            return daysLeft <= 2 && daysLeft >= 0;
-            }
-            
-            function calculateAverage(grades) {
-            if (grades.length === 0) return 0;
-            return grades.reduce((sum, grade) => sum + grade, 0) / grades.length;
-            }
-            
-            function changeWeek(direction) {
+        }
+        
+        // Change week
+        function changeWeek(direction) {
             let currentWeek = parseInt(localStorage.getItem('currentWeek') || '1');
             currentWeek += direction;
                 
@@ -1917,81 +2035,50 @@
                 
             localStorage.setItem('currentWeek', currentWeek.toString());
             document.getElementById('currentWeek').textContent = `Тиждень ${currentWeek}`;
-            }
-
-                    // Додати обробник події для поля завантаження файлу
-            document.getElementById('profile-avatar').addEventListener('change', function(e) {
-                handleAvatarUpload(e.target.files[0]);
+        }
+        
+        // Helper functions
+        function formatDate(date, dayOffset = 0) {
+            const targetDate = new Date(date);
+            targetDate.setDate(targetDate.getDate() + dayOffset);
+                
+            const options = { day: '2-digit', month: '2-digit', year: 'numeric' };
+            return targetDate.toLocaleDateString('uk-UA', options);
+        }
+        
+        function formatDateTime(timestamp) {
+            const date = new Date(timestamp);
+            return date.toLocaleString('uk-UA', {
+                day: '2-digit',
+                month: '2-digit',
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
             });
+        }
+        
+        function getDaysLeft(dueDate) {
+            const now = new Date();
+            const timeDiff = dueDate - now;
+            const daysLeft = Math.ceil(timeDiff / (1000 * 60 * 60 * 24));
             
-            // Функція для обробки завантаження аватарки
-            function handleAvatarUpload(file) {
-                if (!file || !file.type.match('image.*')) {
-                    alert('Будь ласка, виберіть зображення');
-                    return;
-                }
-                
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    const avatarDataUrl = e.target.result;
-                    
-                    // Показати прев'ю
-                    document.getElementById('avatar-preview').style.display = 'block';
-                    document.getElementById('avatar-preview-img').src = avatarDataUrl;
-                    
-                    // Зберегти тимчасово для подальшого використання
-                    localStorage.setItem('tempAvatar', avatarDataUrl);
-                };
-                reader.readAsDataURL(file);
-            }
-            
-            // Оновити функцію saveProfile()
-            function saveProfile() {
-                const name = document.getElementById('profile-name').value;
-                const email = document.getElementById('profile-email').value;
-                const password = document.getElementById('profile-password').value;
-                const passwordConfirm = document.getElementById('profile-password-confirm').value;
-                
-                // Отримати завантажену аватарку
-                const avatarDataUrl = localStorage.getItem('tempAvatar');
-                
-                // ... решта коду функції saveProfile() ...
-                
-                // Оновити аватарку, якщо була завантажена нова
-                if (avatarDataUrl) {
-                    currentUser.avatar = avatarDataUrl;
-                    // Видалити тимчасові дані
-                    localStorage.removeItem('tempAvatar');
-                }
-                
-                // ... решта коду функції saveProfile() ...
-            }
-            
-            // Оновити функцію resetProfileForm()
-            function resetProfileForm() {
-                const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-                document.getElementById('profile-name').value = currentUser.name;
-                document.getElementById('profile-email').value = currentUser.email;
-                document.getElementById('profile-password').value = '';
-                document.getElementById('profile-password-confirm').value = '';
-                
-                // Скинути поле завантаження файлу
-                document.getElementById('profile-avatar').value = '';
-                document.getElementById('avatar-preview').style.display = 'none';
-                localStorage.removeItem('tempAvatar');
-            }
-            
-            // Додати перевірку при завантаженні сторінки
-            window.onload = function() {
-                // ... існуючий код ...
-                
-                // Перевірити, чи є тимчасова аватарка
-                const tempAvatar = localStorage.getItem('tempAvatar');
-                if (tempAvatar) {
-                    document.getElementById('avatar-preview').style.display = 'block';
-                    document.getElementById('avatar-preview-img').src = tempAvatar;
-                }
-            }
-        </script>
-    </body>
+            if (daysLeft === 0) return 'Сьогодні';
+            if (daysLeft === 1) return 'Завтра';
+            if (daysLeft < 0) return 'Прострочено';
+            return `Залишилось днів: ${daysLeft}`;
+        }
+        
+        function isUrgent(dueDate) {
+            const now = new Date();
+            const timeDiff = new Date(dueDate) - now;
+            const daysLeft = Math.ceil(timeDiff / (1000 * 60 * 60 * 24));
+            return daysLeft <= 2 && daysLeft >= 0;
+        }
+        
+        function calculateAverage(grades) {
+            if (grades.length === 0) return 0;
+            return grades.reduce((sum, grade) => sum + grade, 0) / grades.length;
+        }
+    </script>
+</body>
 </html>
