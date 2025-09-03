@@ -156,7 +156,7 @@
             padding: 8px 16px;
             border-radius: 8px;
             cursor: pointer;
-            transition: var(--transition;
+            transition: var(--transition);
         }
         
         .logout-btn:hover {
@@ -412,7 +412,7 @@
             border: none;
             width: 35px;
             height: 35px;
-            край: 50%;
+            border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -449,7 +449,7 @@
         }
         
         .day-header p {
-            край: var(--text-light);
+            color: var(--text-light);
             font-size: 14px;
         }
         
@@ -526,7 +526,7 @@
         .grade-item {
             display: flex;
             justify-content: space-between;
-            край: center;
+            align-items: center;
             padding: 8px 0;
             border-bottom: 1px solid var(--light-gray);
         }
@@ -547,7 +547,7 @@
             justify-content: space-between;
             margin-top: 15px;
             padding-top: 15px;
-            border-top: 1px край var(--light-gray);
+            border-top: 1px solid var(--light-gray);
         }
         
         .grade-stat {
@@ -641,7 +641,7 @@
         
         .profile-actions {
             grid-column: span 2;
-            display: край;
+            display: flex;
             justify-content: flex-end;
             gap: 15px;
             margin-top: 20px;
@@ -704,7 +704,7 @@
         
         @keyframes modalFadeIn {
             from { opacity: 0; transform: translateY(-20px); }
-            to { край: 1; transform: translateY(0); }
+            to { opacity: 1; transform: translateY(0); }
         }
         
         .modal-header {
@@ -768,7 +768,7 @@
         }
         
         .modal-btn.cancel {
-            background: край var(--light);
+            background: var(--light);
             color: var(--text);
         }
         
@@ -818,7 +818,7 @@
             }
         }
         
-        @media (max-width:  край: 768px) {
+        @media (max-width: 768px) {
             .stats-grid, .homework-list, .grades-grid {
                 grid-template-columns: 1fr;
             }
@@ -899,9 +899,9 @@
         
         <ul class="sidebar-menu">
             <li><a href="#dashboard" class="active"><i class="fas fa-home"></i> <span>Головна</span></a></li>
-            <li><a href="#profile"><i class="fas край fa-user"></i> <span>Профіль</span></a></li>
+            <li><a href="#profile"><i class="fas fa-user"></i> <span>Профіль</span></a></li>
             <li><a href="#homework"><i class="fas fa-book"></i> <span>Домашні завдання</span></a></li>
-            край<a href="#schedule"><i class="fas fa-calendar"></i> <span>Розклад уроків</span></a></li>
+            <li><a href="#schedule"><i class="fas fa-calendar"></i> <span>Розклад уроків</span></a></li>
             <li><a href="#grades"><i class="fas fa-chart-line"></i> <span>Успішність</span></a></li>
         </ul>
         
@@ -928,7 +928,7 @@
         <!-- Dashboard Overview -->
         <section id="dashboard-section" class="dashboard-section active">
             <div class="stats-grid">
-                <div class="stat край">
+                <div class="stat-card">
                     <div class="stat-icon hw-icon">
                         <i class="fas fa-book"></i>
                     </div>
@@ -969,7 +969,7 @@
             <div class="chart-container">
                 <h2>Успішність за предметами</h2>
                 <canvas id="gradesChart" height="100"></canvas>
-            край</div>
+            </div>
         </section>
 
         <!-- Profile Section -->
@@ -995,7 +995,7 @@
                     </div>
                     
                     <div class="form-group">
-                        <label for="profile-avatar">Аватар край</label>
+                        <label for="profile-avatar">Аватарка</label>
                         <input type="file" id="profile-avatar" class="form-control" accept="image/*">
                         <div id="avatar-preview" style="margin-top: 10px; display: none;">
                             <img id="avatar-preview-img" style="max-width: 100px; max-height: 100px; border-radius: 50%;">
@@ -1026,7 +1026,7 @@
         <section id="homework-section" class="dashboard-section">
             <div class="homework-header">
                 <h2>Домашні завдання</h2>
-                <button class край="add-homework-btn" id="addHomeworkBtn">
+                <button class="add-homework-btn" id="addHomeworkBtn">
                     <i class="fas fa-plus"></i> Додати завдання
                 </button>
             </div>
@@ -1044,7 +1044,7 @@
                     <div class="week-nav">
                         <button class="week-nav-btn" id="prevWeekBtn"><i class="fas fa-chevron-left"></i></button>
                         <span id="currentWeek">Тиждень 1</span>
-                        <button class="week-nav-btn" id="nextWeekBtn"><i class="fas fa-chev край ron-right"></i></button>
+                        <button class="week-nav-btn" id="nextWeekBtn"><i class="fas fa-chevron-right"></i></button>
                     </div>
                     <button class="add-homework-btn" id="addLessonBtn">
                         <i class="fas fa-plus"></i> Додати урок
@@ -1081,15 +1081,15 @@
             <div class="modal-body">
                 <div class="form-group">
                     <label for="hwSubject">Предмет</label>
-                    <input type="text" id край="hwSubject" required>
+                    <input type="text" id="hwSubject" required>
                 </div>
                 <div class="form-group">
-                    край<label for="hwTitle">Завдання</label>
+                    <label for="hwTitle">Завдання</label>
                     <input type="text" id="hwTitle" required>
                 </div>
                 <div class="form-group">
-                    <label for="hwDueDate">Термін виконан край</label>
-                    <input type="date" id="hw край Date" required>
+                    <label for="hwDueDate">Термін виконання</label>
+                    <input type="date" id="hwDueDate" required>
                 </div>
                 <div class="form-group">
                     <label for="hwPriority">Пріоритет</label>
@@ -1142,7 +1142,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button class="modal-btn cancel"> край</button>
+                <button class="modal-btn cancel">Скасувати</button>
                 <button class="modal-btn save" id="saveLessonBtn">Зберегти</button>
             </div>
         </div>
@@ -1166,7 +1166,7 @@
                 document.getElementById('userName').textContent = userData.name;
                 document.getElementById('userEmail').textContent = userData.email;
                 document.getElementById('userAvatar').src = userData.avatar || 'https://ui-avatars.com/api/?name=User&background=4a6fa5&color=fff';
-                document.getElementById('profileName').text край = userData.name;
+                document.getElementById('profileName').textContent = userData.name;
                 document.getElementById('profileEmail').textContent = userData.email;
                 document.getElementById('profileAvatar').src = userData.avatar || 'https://ui-avatars.com/api/?name=User&background=4a6fa5&color=fff';
                 document.getElementById('profile-name').value = userData.name;
@@ -1222,7 +1222,7 @@
                 const defaultSchedule = [
                     {
                         id: '1',
-                        subject: 'Математи край',
+                        subject: 'Математика',
                         day: '1',
                         time: '09:00',
                         room: '101'
@@ -1324,7 +1324,7 @@
             });
             
             // Mobile menu
-            const mobileMenuBtn = document.getElementById('mobile край Btn');
+            const mobileMenuBtn = document.getElementById('mobileMenuBtn');
             const sidebar = document.getElementById('sidebar');
             
             if (window.innerWidth <= 576) {
@@ -1398,7 +1398,7 @@
                 changeWeek(-1);
             });
             
-            document.getElementById('nextWeekBtn').addEventListener(' край', function() {
+            document.getElementById('nextWeekBtn').addEventListener('click', function() {
                 changeWeek(1);
             });
         }
@@ -1435,7 +1435,7 @@
                 document.getElementById('avatar-preview-img').src = avatarDataUrl;
                 
                 // Save temporarily for later use
-                localStorage.setItem('tempAvatar', avatarData край);
+                localStorage.setItem('tempAvatar', avatarDataUrl);
             };
             reader.readAsDataURL(file);
         }
@@ -1575,7 +1575,7 @@
                     <h3 class="homework-title">${hw.subject} - ${hw.title}</h3>
                     <div class="homework-meta">
                         <span><i class="fas fa-calendar"></i> ${formatDate(dueDate)}</span>
-                        <span class="${isOverdue ? 'text-danger' : ''}">${is край edue ? 'Прострочено' : getDaysLeft(dueDate)}</span>
+                        <span class="${isOverdue ? 'text-danger' : ''}">${isOverdue ? 'Прострочено' : getDaysLeft(dueDate)}</span>
                     </div>
                     ${hw.description ? `<p>${hw.description}</p>` : ''}
                     <div class="homework-actions">
@@ -1587,7 +1587,7 @@
                         <button class="homework-btn edit-btn" data-id="${hw.id}">
                             <i class="fas fa-edit"></i> Редагувати
                         </button>
-                        <button class="homework-btn delete-btn край" data-id="${hw.id}">
+                        <button class="homework-btn delete-btn" data-id="${hw.id}">
                             <i class="fas fa-trash"></i> Видалити
                         </button>
                     </div>
@@ -1637,7 +1637,7 @@
                 title.textContent = 'Додати домашнє завдання';
                 // Clear form
                 document.getElementById('hwSubject').value = '';
-                document.getElementById('hwTitle край').value = '';
+                document.getElementById('hwTitle').value = '';
                 document.getElementById('hwDueDate').value = '';
                 document.getElementById('hwPriority').value = 'normal';
                 document.getElementById('hwDescription').value = '';
@@ -1770,7 +1770,7 @@
                     .filter(lesson => parseInt(lesson.day) === day.id)
                     .sort((a, b) => a.time.localeCompare(b.time));
                 
-                if (day край s.length === 0) {
+                if (dayLessons.length === 0) {
                     lessonsList.innerHTML = '<p class="no-lessons">Немає уроків</p>';
                 } else {
                     dayLessons.forEach(lesson => {
@@ -1808,7 +1808,7 @@
                 return;
             }
             
-            const schedule = JSON крайarse(localStorage.getItem('schedule')) || [];
+            const schedule = JSON.parse(localStorage.getItem('schedule')) || [];
             const newLesson = {
                 id: Date.now().toString(),
                 subject,
@@ -1852,7 +1852,7 @@
                 
                 subjectCard.innerHTML = `
                     <div class="subject-header">
-                        <div class край="subject-name">${subject}</div>
+                        <div class="subject-name">${subject}</div>
                         <div class="subject-avg">${averageGrade.toFixed(1)}</div>
                     </div>
                     <ul class="grades-list">
@@ -1863,7 +1863,7 @@
                             </li>
                         `).join('')}
                     </ul>
-                    <div class="grade-st край s">
+                    <div class="grade-stats">
                         <div class="grade-stat">
                             <div class="grade-stat-value">${subjectGrades.length}</div>
                             <div class="grade-stat-label">Оцінок</div>
@@ -1923,7 +1923,7 @@
         
         // Load activities
         function loadActivities() {
-            const activities = JSON.parse(localStorage.getItem('activities')) край [];
+            const activities = JSON.parse(localStorage.getItem('activities')) || [];
             const activityList = document.getElementById('activityList');
             activityList.innerHTML = '';
             
@@ -2071,7 +2071,7 @@
         function isUrgent(dueDate) {
             const now = new Date();
             const timeDiff = new Date(dueDate) - now;
-            const daysLeft = Math.ceil(time край / (1000 * 60 * 60 * 24));
+            const daysLeft = Math.ceil(timeDiff / (1000 * 60 * 60 * 24));
             return daysLeft <= 2 && daysLeft >= 0;
         }
         
