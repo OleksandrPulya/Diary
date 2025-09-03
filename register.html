@@ -3,589 +3,234 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Реєстрація - Auth App</title>
+    <title>Освітній портал - Реєстрація</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-        }
-
-        body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        :root {
+            --primary: #4a6fa5;
+            --primary-light: #6d8ec7;
+            --secondary: #6c757d;
+            --accent: #ff7e5f;
+            --light: #f8f9fa;
+            --light-gray: #e9ecef;
+            --success: #28a745;
+            --warning: #ffc107;
+            --danger: #dc3545;
+            --text: #343a40;
+            --text-light: #6c757d;
+            --shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            --transition: all 0.3s ease;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4eaf1 100%);
+            background-attachment: fixed;
+            color: var(--text);
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
             padding: 20px;
         }
-
-        .container {
+        
+        .auth-container {
             width: 100%;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        /* Auth Form */
-        .auth-form {
+            max-width: 500px;
             background: white;
-            padding: 40px;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-            width: 100%;
-            max-width: 450px;
-            margin: 0 auto;
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: var(--shadow);
+            animation: fadeIn 0.8s ease;
         }
-
-        .form-header {
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .logo {
             text-align: center;
             margin-bottom: 30px;
         }
-
-        .form-header h1 {
-            color: #333;
+        
+        .logo h1 {
+            color: var(--primary);
+            font-size: 28px;
             margin-bottom: 10px;
-            font-size: 2rem;
         }
-
-        .form-header p {
-            color: #666;
+        
+        .logo a {
+            color: var(--primary);
+            text-decoration: none;
+            display: inline-block;
+            margin-top: 10px;
         }
-
+        
+        .logo a:hover {
+            text-decoration: underline;
+        }
+        
         .form-group {
             margin-bottom: 20px;
-            position: relative;
         }
-
+        
         .form-group label {
             display: block;
             margin-bottom: 8px;
-            color: #333;
-            font-weight: 500;
+            font-weight: 600;
+            color: var(--text);
         }
-
-        .password-input-container {
-            position: relative;
-        }
-
-        .password-input {
+        
+        .form-control {
             width: 100%;
-            padding: 12px 45px 12px 15px;
-            border: 2px solid #ddd;
-            border-radius: 8px;
+            padding: 14px 16px;
+            border: 2px solid var(--light-gray);
+            border-radius: 10px;
             font-size: 16px;
-            transition: border-color 0.3s ease;
+            transition: var(--transition);
         }
-
-        .password-input:focus {
+        
+        .form-control:focus {
+            border-color: var(--primary);
             outline: none;
-            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(74, 111, 165, 0.2);
         }
-
-        .password-toggle {
-            position: absolute;
-            right: 15px;
-            top: 50%;
-            transform: translateY(-50%);
-            background: none;
-            border: none;
-            cursor: pointer;
-            color: #666;
-            font-size: 18px;
-            padding: 0;
-            width: 24px;
-            height: 24px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .password-toggle:hover {
-            color: #667eea;
-        }
-
-        .password-input.error {
-            border-color: #ff4757;
-        }
-
-        .password-input.warning {
-            border-color: #ffa502;
-        }
-
-        .password-input.success {
-            border-color: #2ed573;
-        }
-
-        .error-message {
-            color: #ff4757;
-            font-size: 14px;
-            margin-top: 5px;
-            display: none;
-        }
-
-        .password-strength {
-            margin-top: 10px;
-            height: 5px;
-            border-radius: 3px;
-            background: #ddd;
-            overflow: hidden;
-        }
-
-        .strength-meter {
-            height: 100%;
-            width: 0%;
-            transition: all 0.3s ease;
-        }
-
-        .strength-text {
-            font-size: 14px;
-            margin-top: 5px;
-            font-weight: 500;
-        }
-
-        .strength-very-weak { color: #ff4757; }
-        .strength-weak { color: #ff6b81; }
-        .strength-medium { color: #ffa502; }
-        .strength-strong { color: #2ed573; }
-        .strength-very-strong { color: #1e90ff; }
-
-        .password-requirements {
-            margin-top: 10px;
-            padding: 10px;
-            background: #f8f9fa;
-            border-radius: 8px;
-            font-size: 14px;
-        }
-
-        .requirement {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            margin-bottom: 5px;
-            color: #666;
-        }
-
-        .requirement.fulfilled {
-            color: #2ed573;
-        }
-
-        .requirement.unfulfilled {
-            color: #ff4757;
-        }
-
-        .auth-links {
-            text-align: center;
-            margin-top: 30px;
-        }
-
-        .auth-links p {
-            margin-bottom: 10px;
-            color: #666;
-        }
-
-        .auth-links a {
-            color: #667eea;
-            text-decoration: none;
-        }
-
-        .auth-links a:hover {
-            text-decoration: underline;
-        }
-
-        /* Buttons */
+        
         .btn {
-            display: inline-block;
-            padding: 12px 30px;
+            width: 100%;
+            padding: 14px 28px;
+            background: var(--primary);
+            color: white;
             border: none;
-            border-radius: 8px;
+            border-radius: 10px;
+            cursor: pointer;
             font-size: 16px;
             font-weight: 600;
-            text-decoration: none;
+            transition: var(--transition);
+            display: inline-block;
+        }
+        
+        .btn:hover {
+            background: var(--primary-light);
+            transform: translateY(-3px);
+            box-shadow: 0 7px 15px rgba(74, 111, 165, 0.3);
+        }
+        
+        .form-footer {
             text-align: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
+            margin-top: 20px;
+            color: var(--text-light);
         }
-
-        .btn-primary {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
+        
+        .form-footer a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
         }
-
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        
+        .form-footer a:hover {
+            text-decoration: underline;
         }
-
-        .btn-full {
-            width: 100%;
-            margin-bottom: 20px;
-        }
-
-        /* Responsive */
-        @media (max-width: 768px) {
-            .auth-form {
-                padding: 30px;
+        
+        @media (max-width: 480px) {
+            .auth-container {
+                padding: 20px;
             }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="auth-form">
-            <div class="form-header">
-                <h1>Реєстрація</h1>
-                <p>Створіть новий акаунт</p>
-            </div>
-            
-            <form id="registerForm">
-                <div class="form-group">
-                    <label for="fullName">Повне ім'я:</label>
-                    <input type="text" id="fullName" name="fullName" class="password-input" required>
-                    <div class="error-message" id="fullNameError">Будь ласка, введіть ваше ім'я</div>
-                </div>
-                
-                <div class="form-group">
-                    <label for="regEmail">Електронна пошта:</label>
-                    <input type="email" id="regEmail" name="email" class="password-input" required>
-                    <div class="error-message" id="emailError">Будь ласка, введіть коректну email адресу</div>
-                </div>
-                
-                <div class="form-group">
-                    <label for="regPassword">Пароль:</label>
-                    <div class="password-input-container">
-                        <input type="password" id="regPassword" name="password" class="password-input" required minlength="6">
-                        <button type="button" class="password-toggle" id="passwordToggle">
-                            👁️
-                        </button>
-                    </div>
-                    
-                    <div class="password-strength">
-                        <div class="strength-meter" id="strengthMeter"></div>
-                    </div>
-                    
-                    <div class="strength-text" id="strengthText">Надійність пароля</div>
-                    
-                    <div class="password-requirements">
-                        <div class="requirement" id="reqLength">
-                            <span>✓</span> Мінімум 8 символів
-                        </div>
-                        <div class="requirement" id="reqLowercase">
-                            <span>✓</span> Мінімум 1 мала літера
-                        </div>
-                        <div class="requirement" id="reqUppercase">
-                            <span>✓</span> Мінімум 1 велика літера
-                        </div>
-                        <div class="requirement" id="reqNumber">
-                            <span>✓</span> Мінімум 1 цифра
-                        </div>
-                        <div class="requirement" id="reqSpecial">
-                            <span>✓</span> Мінімум 1 спецсимвол (!@#$%^&*)
-                        </div>
-                    </div>
-                    
-                    <div class="error-message" id="passwordError">Пароль занадто слабкий</div>
-                </div>
-                
-                <div class="form-group">
-                    <label for="confirmPassword">Підтвердіть пароль:</label>
-                    <div class="password-input-container">
-                        <input type="password" id="confirmPassword" name="confirmPassword" class="password-input" required>
-                        <button type="button" class="password-toggle" id="confirmPasswordToggle">
-                            👁️
-                        </button>
-                    </div>
-                    <div class="error-message" id="confirmPasswordError">Паролі не співпадають</div>
-                </div>
-                
-                <button type="submit" class="btn btn-primary btn-full">Зареєструватися</button>
-            </form>
-            
-            <div class="auth-links">
-                <p>Вже маєте акаунт? <a href="login.html">Увійти</a></p>
-                <p><a href="index.html">← Повернутися на головну</a></p>
-            </div>
+    <div class="auth-container">
+        <div class="logo">
+            <h1><i class="fas fa-graduation-cap"></i> Реєстрація</h1>
+            <a href="index.html">← Повернутися на головну</a>
         </div>
+        
+        <form id="register-form">
+            <div class="form-group">
+                <label for="register-name">Ім'я</label>
+                <input type="text" id="register-name" class="form-control" placeholder="Ваше ім'я" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="register-email">Електронна пошта</label>
+                <input type="email" id="register-email" class="form-control" placeholder="Ваша пошта" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="register-password">Пароль</label>
+                <input type="password" id="register-password" class="form-control" placeholder="Ваш пароль" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="register-password-confirm">Підтвердження пароля</label>
+                <input type="password" id="register-password-confirm" class="form-control" placeholder="Підтвердіть пароль" required>
+            </div>
+            
+            <button type="submit" class="btn">Зареєструватися</button>
+            
+            <div class="form-footer">
+                <p>Вже є акаунт? <a href="login.html">Увійти</a></p>
+            </div>
+        </form>
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const registerForm = document.getElementById('registerForm');
-            const passwordInput = document.getElementById('regPassword');
-            const confirmPasswordInput = document.getElementById('confirmPassword');
-            const passwordToggle = document.getElementById('passwordToggle');
-            const confirmPasswordToggle = document.getElementById('confirmPasswordToggle');
-            const strengthMeter = document.getElementById('strengthMeter');
-            const strengthText = document.getElementById('strengthText');
+        // Перевіряємо чи користувач вже авторизований
+        window.onload = function() {
+            const isLoggedIn = localStorage.getItem('isLoggedIn');
+            if (isLoggedIn === 'true') {
+                window.location.href = 'dashboard.html';
+            }
             
-            const inputs = {
-                fullName: document.getElementById('fullName'),
-                email: document.getElementById('regEmail'),
-                password: passwordInput,
-                confirmPassword: confirmPasswordInput
-            };
-
-            const errors = {
-                fullName: document.getElementById('fullNameError'),
-                email: document.getElementById('emailError'),
-                password: document.getElementById('passwordError'),
-                confirmPassword: document.getElementById('confirmPasswordError')
-            };
-
-            const requirements = {
-                length: document.getElementById('reqLength'),
-                lowercase: document.getElementById('reqLowercase'),
-                uppercase: document.getElementById('reqUppercase'),
-                number: document.getElementById('reqNumber'),
-                special: document.getElementById('reqSpecial')
-            };
-
-            // Toggle password visibility
-            function setupPasswordToggle(toggleButton, inputField) {
-                toggleButton.addEventListener('click', function() {
-                    const isPassword = inputField.type === 'password';
-                    inputField.type = isPassword ? 'text' : 'password';
-                    toggleButton.textContent = isPassword ? '🔒' : '👁️';
-                });
-            }
-
-            // Initialize password toggles
-            setupPasswordToggle(passwordToggle, passwordInput);
-            setupPasswordToggle(confirmPasswordToggle, confirmPasswordInput);
-
-            // Check if email already exists
-            function isEmailRegistered(email) {
-                const users = JSON.parse(localStorage.getItem('registeredUsers') || '[]');
-                return users.some(user => user.email === email);
-            }
-
-            // Save user to localStorage
-            function saveUser(userData) {
-                const users = JSON.parse(localStorage.getItem('registeredUsers') || '[]');
-                users.push(userData);
-                localStorage.setItem('registeredUsers', JSON.stringify(users));
-            }
-
-            // Password strength checker
-            function checkPasswordStrength(password) {
-                let strength = 0;
-                let messages = [];
-                
-                // Length check
-                if (password.length === 0) {
-                    return { score: 0, message: 'Введіть пароль' };
-                }
-                
-                if (password.length < 4) {
-                    return { score: 1, message: 'Дуже короткий пароль' };
-                }
-                
-                if (password.length >= 8) strength += 1;
-                if (password.length >= 12) strength += 1;
-                
-                // Character variety
-                if (/[a-z]/.test(password)) strength += 1;
-                if (/[A-Z]/.test(password)) strength += 1;
-                if (/[0-9]/.test(password)) strength += 1;
-                if (/[^A-Za-z0-9]/.test(password)) strength += 2;
-                
-                // Common weak passwords
-                const weakPasswords = [
-                    'password', '123456', 'qwerty', 'admin', 'welcome',
-                    '12345678', '111111', '123123', '123456789', 'password1'
-                ];
-                
-                if (weakPasswords.includes(password.toLowerCase())) {
-                    strength = 1;
-                    messages.push('Цей пароль дуже поширений');
-                }
-                
-                // Sequential characters
-                if (/(abc|bcd|cde|def|efg|fgh|ghi|hij|ijk|jkl|klm|lmn|mno|nop|opq|pqr|qrs|rst|stu|tuv|uvw|vwx|wxy|xyz)/i.test(password)) {
-                    strength = Math.max(1, strength - 1);
-                    messages.push('Уникайте послідовних символів');
-                }
-                
-                // Repeated characters
-                if (/(.)\1{2,}/.test(password)) {
-                    strength = Math.max(1, strength - 1);
-                    messages.push('Уникайте повторюваних символів');
-                }
-                
-                // Determine strength level
-                let message = '';
-                let percentage = 0;
-                
-                if (strength <= 2) {
-                    message = 'Дуже слабкий пароль';
-                    percentage = 25;
-                } else if (strength <= 4) {
-                    message = 'Слабкий пароль';
-                    percentage = 40;
-                } else if (strength <= 6) {
-                    message = 'Середній пароль';
-                    percentage = 60;
-                } else if (strength <= 8) {
-                    message = 'Хороший пароль';
-                    percentage = 80;
-                } else {
-                    message = 'Дуже сильний пароль!';
-                    percentage = 100;
-                }
-                
-                // Add specific messages
-                if (messages.length > 0) {
-                    message += ' (' + messages.join(', ') + ')';
-                }
-                
-                return { score: strength, message, percentage };
-            }
-
-            // Update password requirements
-            function updateRequirements(password) {
-                const hasLength = password.length >= 8;
-                const hasLowercase = /[a-z]/.test(password);
-                const hasUppercase = /[A-Z]/.test(password);
-                const hasNumber = /[0-9]/.test(password);
-                const hasSpecial = /[^A-Za-z0-9]/.test(password);
-                
-                requirements.length.className = hasLength ? 'requirement fulfilled' : 'requirement unfulfilled';
-                requirements.lowercase.className = hasLowercase ? 'requirement fulfilled' : 'requirement unfulfilled';
-                requirements.uppercase.className = hasUppercase ? 'requirement fulfilled' : 'requirement unfulfilled';
-                requirements.number.className = hasNumber ? 'requirement fulfilled' : 'requirement unfulfilled';
-                requirements.special.className = hasSpecial ? 'requirement fulfilled' : 'requirement unfulfilled';
-            }
-
-            // Real-time password strength update
-            passwordInput.addEventListener('input', function() {
-                const password = this.value;
-                const strength = checkPasswordStrength(password);
-                
-                // Update strength meter
-                strengthMeter.style.width = strength.percentage + '%';
-                strengthText.textContent = strength.message;
-                
-                // Update meter color based on strength
-                if (strength.score <= 2) {
-                    strengthMeter.style.background = '#ff4757';
-                    strengthText.className = 'strength-text strength-very-weak';
-                    passwordInput.className = 'password-input error';
-                } else if (strength.score <= 4) {
-                    strengthMeter.style.background = '#ff6b81';
-                    strengthText.className = 'strength-text strength-weak';
-                    passwordInput.className = 'password-input warning';
-                } else if (strength.score <= 6) {
-                    strengthMeter.style.background = '#ffa502';
-                    strengthText.className = 'strength-text strength-medium';
-                    passwordInput.className = 'password-input';
-                } else {
-                    strengthMeter.style.background = '#2ed573';
-                    strengthText.className = 'strength-text strength-strong';
-                    passwordInput.className = 'password-input success';
-                }
-                
-                // Update requirements
-                updateRequirements(password);
-                
-                // Validate password match
-                validatePasswordMatch();
+            // Додаємо обробник форми
+            document.getElementById('register-form').addEventListener('submit', function(e) {
+                e.preventDefault();
+                register();
             });
-
-            // Other validation functions
-            confirmPasswordInput.addEventListener('input', validatePasswordMatch);
-            inputs.email.addEventListener('blur', validateEmail);
-
-            function validateEmail() {
-                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-                if (!emailRegex.test(inputs.email.value)) {
-                    showError(inputs.email, errors.email, 'Будь ласка, введіть коректну email адресу');
-                    return false;
-                }
-                
-                // Check if email is already registered
-                if (isEmailRegistered(inputs.email.value)) {
-                    showError(inputs.email, errors.email, 'Цей email вже зареєстрований');
-                    return false;
-                }
-                
-                hideError(inputs.email, errors.email);
-                return true;
+        };
+        
+        // Реєстрація
+        function register() {
+            const name = document.getElementById('register-name').value;
+            const email = document.getElementById('register-email').value;
+            const password = document.getElementById('register-password').value;
+            const passwordConfirm = document.getElementById('register-password-confirm').value;
+            
+            if (!name || !email || !password) {
+                alert('Будь ласка, заповніть всі поля');
+                return;
             }
-
-            function validatePasswordMatch() {
-                if (inputs.password.value !== inputs.confirmPassword.value) {
-                    showError(inputs.confirmPassword, errors.confirmPassword, 'Паролі не співпадають');
-                    confirmPasswordInput.className = 'password-input error';
-                    return false;
-                } else {
-                    hideError(inputs.confirmPassword, errors.confirmPassword);
-                    confirmPasswordInput.className = 'password-input success';
-                    return true;
-                }
+            
+            if (password !== passwordConfirm) {
+                alert('Паролі не співпадають');
+                return;
             }
-
-            function showError(input, errorElement, message) {
-                input.classList.add('error');
-                errorElement.textContent = message;
-                errorElement.style.display = 'block';
-            }
-
-            function hideError(input, errorElement) {
-                input.classList.remove('error');
-                errorElement.style.display = 'none';
-            }
-
-            if (registerForm) {
-                registerForm.addEventListener('submit', function(e) {
-                    e.preventDefault();
-                    
-                    let isValid = true;
-
-                    // Validate all fields
-                    if (!inputs.fullName.value.trim()) {
-                        showError(inputs.fullName, errors.fullName, 'Будь ласка, введіть ваше ім\'я');
-                        isValid = false;
-                    } else {
-                        hideError(inputs.fullName, errors.fullName);
-                    }
-
-                    if (!validateEmail()) isValid = false;
-                    if (!validatePasswordMatch()) isValid = false;
-
-                    // Check password strength
-                    const passwordStrength = checkPasswordStrength(inputs.password.value);
-                    if (passwordStrength.score < 3) {
-                        showError(inputs.password, errors.password, 'Пароль занадто слабкий. ' + passwordStrength.message);
-                        isValid = false;
-                    } else {
-                        hideError(inputs.password, errors.password);
-                    }
-
-                    if (!isValid) {
-                        alert('Будь ласка, виправте помилки в формі');
-                        return;
-                    }
-
-                    // Save user data
-                    const userData = {
-                        id: Date.now().toString(),
-                        fullName: inputs.fullName.value,
-                        email: inputs.email.value,
-                        password: inputs.password.value, // У реальному додатку пароль має бути хешований!
-                        registeredAt: new Date().toISOString()
-                    };
-
-                    saveUser(userData);
-
-                    // Simulate registration process
-                    console.log('Registration successful:', userData);
-
-                    // Redirect to login page
-                    alert('Реєстрація успішна! Тепер ви можете увійти.');
-                    window.location.href = 'login.html';
-                });
-            }
-        });
+            
+            // Зберігаємо дані користувача
+            const userData = {
+                name: name,
+                email: email,
+                password: password,
+                avatar: "https://ui-avatars.com/api/?name=" + encodeURIComponent(name) + "&size=120&background=4a6fa5&color=fff",
+                homework: [],
+                schedule: [],
+                grades: []
+            };
+            
+            localStorage.setItem('userData', JSON.stringify(userData));
+            localStorage.setItem('isLoggedIn', 'true');
+            
+            alert('Реєстрація успішна!');
+            window.location.href = 'dashboard.html';
+        }
     </script>
 </body>
 </html>
