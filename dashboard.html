@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        {
+        * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
@@ -156,7 +156,7 @@
             padding: 8px 16px;
             border-radius: 8px;
             cursor: pointer;
-            transition: var(--transition;
+            transition: var(--transition);
         }
         
         .logout-btn:hover {
@@ -412,7 +412,7 @@
             border: none;
             width: 35px;
             height: 35px;
-            край: 50%;
+            border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -449,7 +449,7 @@
         }
         
         .day-header p {
-            край: var(--text-light);
+            color: var(--text-light);
             font-size: 14px;
         }
         
@@ -526,7 +526,7 @@
         .grade-item {
             display: flex;
             justify-content: space-between;
-            край: center;
+            align-items: center;
             padding: 8px 0;
             border-bottom: 1px solid var(--light-gray);
         }
@@ -547,7 +547,7 @@
             justify-content: space-between;
             margin-top: 15px;
             padding-top: 15px;
-            border-top: 1px край var(--light-gray);
+            border-top: 1px solid var(--light-gray);
         }
         
         .grade-stat {
@@ -641,7 +641,7 @@
         
         .profile-actions {
             grid-column: span 2;
-            display: край;
+            display: flex;
             justify-content: flex-end;
             gap: 15px;
             margin-top: 20px;
@@ -704,7 +704,7 @@
         
         @keyframes modalFadeIn {
             from { opacity: 0; transform: translateY(-20px); }
-            to { край: 1; transform: translateY(0); }
+            to { opacity: 1; transform: translateY(0); }
         }
         
         .modal-header {
@@ -712,50 +712,30 @@
             justify-content: space-between;
             align-items: center;
             margin-bottom: 20px;
-            padding-bottom: 15px;
             border-bottom: 1px solid var(--light-gray);
+            padding-bottom: 10px;
         }
         
-        .modal-header h2 {
+        .modal-header h3 {
             color: var(--primary);
         }
         
-        .close-modal {
+        .modal-close {
             background: none;
             border: none;
-            font-size: 24px;
+            font-size: 20px;
             cursor: pointer;
             color: var(--text-light);
         }
         
-        .modal-body .form-group {
-            margin-bottom: 20px;
+        .modal-form .form-group {
+            margin-bottom: 15px;
         }
         
-        .modal-body label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 600;
-        }
-        
-        .modal-body input, .modal-body select, .modal-body textarea {
-            width: 100%;
-            padding: 12px 15px;
-            border: 2px solid var(--light-gray);
-            border-radius: 8px;
-            font-size: 16px;
-            transition: var(--transition);
-        }
-        
-        .modal-body input:focus, .modal-body select:focus, .modal-body textarea:focus {
-            border-color: var(--primary);
-            outline: none;
-        }
-        
-        .modal-footer {
+        .modal-actions {
             display: flex;
             justify-content: flex-end;
-            gap: 10px;
+            gap: 15px;
             margin-top: 20px;
         }
         
@@ -765,15 +745,7 @@
             border-radius: 8px;
             cursor: pointer;
             transition: var(--transition);
-        }
-        
-        .modal-btn.cancel {
-            background: край var(--light);
-            color: var(--text);
-        }
-        
-        .modal-btn.cancel:hover {
-            background: var(--light-gray);
+            font-weight: 600;
         }
         
         .modal-btn.save {
@@ -785,7 +757,332 @@
             background: #218838;
         }
         
-        /* Responsive */
-        @media (max-width: 992px) {
-            .sidebar {
-               
+        .modal-btn.cancel {
+            background: var(--light);
+            color: var(--text);
+        }
+        
+        .modal-btn.cancel:hover {
+            background: var(--light-gray);
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <h2><i class="fas fa-graduation-cap"></i> Освітній портал</h2>
+        </div>
+        <ul class="sidebar-menu">
+            <li><a href="#" class="active" data-section="overview"><i class="fas fa-home"></i> Панель</a></li>
+            <li><a href="#" data-section="homework"><i class="fas fa-tasks"></i> Домашні завдання</a></li>
+            <li><a href="#" data-section="schedule"><i class="fas fa-calendar"></i> Розклад</a></li>
+            <li><a href="#" data-section="grades"><i class="fas fa-chart-bar"></i> Оцінки</a></li>
+            <li><a href="#" data-section="profile"><i class="fas fa-user"></i> Профіль</a></li>
+        </ul>
+        <div class="sidebar-footer">
+            <small>&copy; 2024 Освітній портал</small>
+        </div>
+    </div>
+    
+    <div class="main-content">
+        <div class="header">
+            <h1>Панель управління</h1>
+            <div class="user-info">
+                <img src="https://via.placeholder.com/45" alt="User" class="user-avatar">
+                <span id="username">Користувач</span>
+                <button class="logout-btn" id="logoutBtn">Вийти</button>
+            </div>
+        </div>
+        
+        <!-- Sections -->
+        <div id="overview" class="dashboard-section active">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon hw-icon"><i class="fas fa-tasks"></i></div>
+                    <div class="stat-info">
+                        <h3>8</h3>
+                        <p>Невиконаних завдань</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon schedule-icon"><i class="fas fa-calendar-alt"></i></div>
+                    <div class="stat-info">
+                        <h3>12</h3>
+                        <p>Уроків цього тижня</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon grades-icon"><i class="fas fa-chart-line"></i></div>
+                    <div class="stat-info">
+                        <h3>4.5</h3>
+                        <p>Середній бал</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="recent-activities">
+                <h2>Останні дії</h2>
+                <ul class="activity-list">
+                    <li class="activity-item">
+                        <div class="activity-icon"><i class="fas fa-check"></i></div>
+                        <div class="activity-content">
+                            <h4>Завершено домашнє завдання</h4>
+                            <p>Математика - Параграф 15 (10 хв тому)</p>
+                        </div>
+                    </li>
+                    <li class="activity-item">
+                        <div class="activity-icon"><i class="fas fa-calendar"></i></div>
+                        <div class="activity-content">
+                            <h4>Новий урок у розкладі</h4>
+                            <p>Фізика - Додав у четвер о 12:00</p>
+                        </div>
+                    </li>
+                    <li class="activity-item">
+                        <div class="activity-icon"><i class="fas fa-star"></i></div>
+                        <div class="activity-content">
+                            <h4>Отримана оцінка</h4>
+                            <p>Українська мова - 12 балів</p>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            
+            <div class="chart-container">
+                <h2>Статистика оцінок</h2>
+                <canvas id="gradesChart" height="100"></canvas>
+            </div>
+        </div>
+        
+        <div id="homework" class="dashboard-section">
+            <div class="homework-header">
+                <h2>Домашні завдання</h2>
+                <button class="add-homework-btn" id="addHomeworkBtn"><i class="fas fa-plus"></i> Додати</button>
+            </div>
+            <div class="homework-list" id="homeworkList">
+                <!-- Homework items will be added here -->
+            </div>
+        </div>
+        
+        <div id="schedule" class="dashboard-section">
+            <div class="schedule-container">
+                <div class="schedule-nav">
+                    <button class="week-nav-btn" id="prevWeek"><i class="fas fa-chevron-left"></i></button>
+                    <h2>Розклад на тиждень</h2>
+                    <button class="week-nav-btn" id="nextWeek"><i class="fas fa-chevron-right"></i></button>
+                </div>
+                <div class="schedule-grid" id="scheduleGrid">
+                    <!-- Schedule will be populated here -->
+                </div>
+            </div>
+        </div>
+        
+        <div id="grades" class="dashboard-section">
+            <h2>Оцінки</h2>
+            <div class="grades-grid" id="gradesGrid">
+                <!-- Grades will be displayed here -->
+            </div>
+            <div class="chart-container">
+                <h2>Динаміка успішності</h2>
+                <canvas id="performanceChart" height="100"></canvas>
+            </div>
+        </div>
+        
+        <div id="profile" class="dashboard-section">
+            <div class="profile-container">
+                <div class="profile-header">
+                    <img src="https://via.placeholder.com/100" alt="Profile" class="profile-avatar" id="profileAvatar">
+                    <div class="profile-info">
+                        <h2 id="profileName">Користувач</h2>
+                        <p id="profileEmail">email@example.com</p>
+                    </div>
+                </div>
+                <form class="profile-form">
+                    <div class="form-group">
+                        <label for="fullName">Повне ім'я</label>
+                        <input type="text" id="fullName" class="form-control" placeholder="Введіть ім'я">
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Електронна пошта</label>
+                        <input type="email" id="email" class="form-control" placeholder="Введіть email">
+                    </div>
+                    <div class="form-group password-container">
+                        <label for="password">Пароль</label>
+                        <input type="password" id="password" class="form-control" placeholder="Введіть пароль">
+                        <i class="fas fa-eye password-toggle" id="togglePassword"></i>
+                    </div>
+                    <div class="form-group">
+                        <label for="avatar">Фото профілю</label>
+                        <input type="file" id="avatar" class="form-control" accept="image/*">
+                        <div class="avatar-preview" id="avatarPreview"></div>
+                    </div>
+                    <div class="profile-actions">
+                        <button type="button" class="profile-btn cancel-btn">Скасувати</button>
+                        <button type="submit" class="profile-btn save-btn">Зберегти</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Homework Modal -->
+    <div class="modal" id="homeworkModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Додати завдання</h3>
+                <button class="modal-close" id="closeHomeworkModal"><i class="fas fa-times"></i></button>
+            </div>
+            <form class="modal-form" id="homeworkForm">
+                <div class="form-group">
+                    <label for="subject">Предмет</label>
+                    <input type="text" id="subject" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="title">Завдання</label>
+                    <input type="text" id="title" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="dueDate">Термін виконання</label>
+                    <input type="date" id="dueDate" class="form-control" required>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="modal-btn cancel" id="cancelHomework">Скасувати</button>
+                    <button type="submit" class="modal-btn save">Зберегти</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <script>
+        // Navigation
+        const menuLinks = document.querySelectorAll('.sidebar-menu a');
+        const sections = document.querySelectorAll('.dashboard-section');
+        
+        menuLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                
+                menuLinks.forEach(l => l.classList.remove('active'));
+                link.classList.add('active');
+                
+                const sectionId = link.getAttribute('data-section');
+                sections.forEach(section => {
+                    section.classList.remove('active');
+                    if (section.id === sectionId) {
+                        section.classList.add('active');
+                    }
+                });
+            });
+        });
+        
+        // Logout
+        document.getElementById('logoutBtn').addEventListener('click', () => {
+            localStorage.removeItem('isLoggedIn');
+            window.location.href = 'index.html';
+        });
+        
+        // Charts
+        const gradesCtx = document.getElementById('gradesChart').getContext('2d');
+        new Chart(gradesCtx, {
+            type: 'bar',
+            data: {
+                labels: ['Математика', 'Фізика', 'Хімія', 'Історія', 'Українська'],
+                datasets: [{
+                    label: 'Середній бал',
+                    data: [4.7, 4.2, 4.5, 4.0, 4.8],
+                    backgroundColor: 'rgba(74, 111, 165, 0.7)',
+                    borderRadius: 6
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: { legend: { display: false } }
+            }
+        });
+        
+        const performanceCtx = document.getElementById('performanceChart').getContext('2d');
+        new Chart(performanceCtx, {
+            type: 'line',
+            data: {
+                labels: ['Січ', 'Лют', 'Бер', 'Кві', 'Тра', 'Чер'],
+                datasets: [{
+                    label: 'Середній бал',
+                    data: [4.1, 4.3, 4.5, 4.4, 4.6, 4.5],
+                    borderColor: 'rgba(74, 111, 165, 1)',
+                    backgroundColor: 'rgba(74, 111, 165, 0.1)',
+                    fill: true,
+                    tension: 0.3
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: { legend: { display: false } }
+            }
+        });
+        
+        // Homework Modal
+        const homeworkModal = document.getElementById('homeworkModal');
+        const addHomeworkBtn = document.getElementById('addHomeworkBtn');
+        const closeHomeworkModal = document.getElementById('closeHomeworkModal');
+        const cancelHomework = document.getElementById('cancelHomework');
+        const homeworkForm = document.getElementById('homeworkForm');
+        const homeworkList = document.getElementById('homeworkList');
+        
+        addHomeworkBtn.addEventListener('click', () => homeworkModal.classList.add('active'));
+        closeHomeworkModal.addEventListener('click', () => homeworkModal.classList.remove('active'));
+        cancelHomework.addEventListener('click', () => homeworkModal.classList.remove('active'));
+        
+        homeworkForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const subject = document.getElementById('subject').value;
+            const title = document.getElementById('title').value;
+            const dueDate = document.getElementById('dueDate').value;
+            
+            const homeworkItem = document.createElement('div');
+            homeworkItem.classList.add('homework-item');
+            homeworkItem.innerHTML = `
+                <h3 class="homework-title">${subject}</h3>
+                <div class="homework-meta">
+                    <span><i class="fas fa-book"></i> ${title}</span>
+                    <span><i class="fas fa-calendar-alt"></i> ${dueDate}</span>
+                </div>
+                <div class="homework-actions">
+                    <button class="homework-btn complete-btn">Виконано</button>
+                    <button class="homework-btn edit-btn">Редагувати</button>
+                    <button class="homework-btn delete-btn">Видалити</button>
+                </div>
+            `;
+            homeworkList.appendChild(homeworkItem);
+            homeworkModal.classList.remove('active');
+            homeworkForm.reset();
+        });
+        
+        // Password toggle
+        const togglePassword = document.getElementById('togglePassword');
+        const passwordInput = document.getElementById('password');
+        
+        togglePassword.addEventListener('click', () => {
+            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordInput.setAttribute('type', type);
+            togglePassword.classList.toggle('fa-eye');
+            togglePassword.classList.toggle('fa-eye-slash');
+        });
+        
+        // Avatar upload preview
+        const avatarInput = document.getElementById('avatar');
+        const avatarPreview = document.getElementById('avatarPreview');
+        const profileAvatar = document.getElementById('profileAvatar');
+        
+        avatarInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    avatarPreview.innerHTML = `<img src="${event.target.result}" alt="Avatar">`;
+                    profileAvatar.src = event.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+    </script>
+</body>
+</html>
